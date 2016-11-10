@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class SnaiCrawler implements Crawler {
+public class SnaiCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
 
@@ -32,12 +32,13 @@ public class SnaiCrawler implements Crawler {
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<>();
 
-        String url = "https://www.snai.it/sport";
-
-        System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = null;
 
         try {
+            String url = getCrawlerConfig().getString("url");
+            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
+            driver = new FirefoxDriver();
+
             driver.get(url);
             Thread.sleep(2000);
             (new WebDriverWait(driver, 20))

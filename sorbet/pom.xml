@@ -16,6 +16,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <log4j.version>2.2</log4j.version>
+    <selenium.version>3.0.1</selenium.version>
 
     <start-class>it.lf.sorbet.SorbetMain</start-class>
   </properties>
@@ -69,7 +70,12 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.0.1</version>
+      <version>${selenium.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-firefox-driver</artifactId>
+      <version>${selenium.version}</version>
     </dependency>
 
     <dependency>

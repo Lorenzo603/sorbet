@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class BetFairCrawler implements Crawler {
+public class BetFairCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BetFairCrawler.class);
 
@@ -31,15 +31,15 @@ public class BetFairCrawler implements Crawler {
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<>();
 
-        String url = "https://www.betfair.it/sport/football";
-
-        System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-        WebDriver driver = new FirefoxDriver();
-
+        WebDriver driver = null;
         try {
+            String url = getCrawlerConfig().getString("url");
+
+            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
+            driver = new FirefoxDriver();
             driver.get(url);
             (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[title='Serie A']"))).click();
+                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[title='In primo piano']")));
             Thread.sleep(2000);
 
             Document doc = Jsoup.parse(driver.getPageSource());
@@ -62,7 +62,9 @@ public class BetFairCrawler implements Crawler {
             LOG.error("Connection exception", e);
             return Collections.EMPTY_LIST;
         } finally {
-            driver.quit();
+            if (driver != null) {
+                driver.quit();
+            }
         }
         return quotes;
     }
