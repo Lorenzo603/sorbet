@@ -34,26 +34,19 @@ public class QuoteCrawler
             bm.setId(bookmakerId);
             bm.setCrawler(crawler);
             LOG.info("Started crawler: " + bookmakerId);
-            try {
-                crawlPage(quotes, bm);
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
-            }
-
+            List<Quote> crawledQuotes = crawler.crawl();
+            associateBookmakerToQuotes(bm, crawledQuotes);
+            quotes.addAll(crawledQuotes);
             LOG.info("Finished crawler: " + bookmakerId);
         }
 
         writeQuotes(quotes);
     }
 
-    private void crawlPage(List<Quote> quotes, Bookmaker bookmaker) {
-        List<Quote> crawledQuotes = bookmaker.getCrawler().crawl();
-
-        for (Quote quote : crawledQuotes) {
+    private void associateBookmakerToQuotes(Bookmaker bookmaker, List<Quote> quotes) {
+        for (Quote quote : quotes) {
             quote.setBookmaker(bookmaker);
         }
-
-        quotes.addAll(crawledQuotes);
     }
 
     private void writeQuotes(List<Quote> quotes) {

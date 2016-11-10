@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,8 +16,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Service
 public class SnaiCrawler implements Crawler {
@@ -31,7 +30,7 @@ public class SnaiCrawler implements Crawler {
     }
 
     public List<Quote> crawl() {
-        final List<Quote> quotes = new ArrayList<Quote>();
+        final List<Quote> quotes = new ArrayList<>();
 
         String url = "https://www.snai.it/sport";
 
@@ -57,23 +56,22 @@ public class SnaiCrawler implements Crawler {
             Document doc = Jsoup.parse(driver.getPageSource());
             Elements matches = doc.select("tr.ng-scope");
 
-            matches.forEach(new Consumer<Element>() {
-                public void accept(Element element) {
-                    Elements match = element.select("td");
-                    Quote quote = new Quote();
-                    quote.setQ1(Double.valueOf(match.get(1).text().replace(',', '.')));
-                    quote.setD(Double.valueOf(match.get(2).text().replace(',', '.')));
-                    quote.setQ2(Double.valueOf(match.get(3).text().replace(',', '.')));
+            matches.forEach(element -> {
+                Elements match = element.select("td");
+                Quote quote = new Quote();
+                quote.setQ1(Double.valueOf(match.get(1).text().replace(',', '.')));
+                quote.setD(Double.valueOf(match.get(2).text().replace(',', '.')));
+                quote.setQ2(Double.valueOf(match.get(3).text().replace(',', '.')));
 
-                    quote.setAliasTeam1(match.get(0).select("a").text().split("-")[0].trim());
-                    quote.setAliasTeam2(match.get(0).select("a").text().split("-")[1].trim());
+                quote.setAliasTeam1(match.get(0).select("a").text().split("-")[0].trim());
+                quote.setAliasTeam2(match.get(0).select("a").text().split("-")[1].trim());
 
-                    quotes.add(quote);
-                }
+                quotes.add(quote);
             });
 
         } catch (Exception e) {
             LOG.error("Connection exception", e);
+            return Collections.EMPTY_LIST;
         } finally {
             driver.quit();
         }
