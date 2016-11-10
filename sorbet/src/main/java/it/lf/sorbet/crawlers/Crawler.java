@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface Crawler {
 
+    String getBookmakerId();
+
     List<Quote> crawl();
+
 
 }

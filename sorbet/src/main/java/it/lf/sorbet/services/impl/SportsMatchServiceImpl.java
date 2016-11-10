@@ -4,12 +4,14 @@ import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.services.SportsMatchService;
 import it.lf.sorbet.services.TeamService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+@Service
 public class SportsMatchServiceImpl implements SportsMatchService {
 
     private HashMap<String, SportsMatch> sportsMatchHashMap;

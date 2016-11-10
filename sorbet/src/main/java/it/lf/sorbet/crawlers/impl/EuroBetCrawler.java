@@ -14,16 +14,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-
+@Service
 public class EuroBetCrawler implements Crawler {
 
     private static Logger LOG = LogManager.getLogger(EuroBetCrawler.class);
+
+    @Override
+    public String getBookmakerId() {
+        return "EuroBet";
+    }
 
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<Quote>();

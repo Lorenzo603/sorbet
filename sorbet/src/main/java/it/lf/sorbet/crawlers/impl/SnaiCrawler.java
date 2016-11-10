@@ -14,15 +14,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Service
 public class SnaiCrawler implements Crawler {
 
-    private static Logger LOG = LogManager.getLogger(BWinCrawler.class);
+    private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
+
+    @Override
+    public String getBookmakerId() {
+        return "Snai";
+    }
 
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<Quote>();

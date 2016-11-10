@@ -8,7 +8,9 @@ import it.lf.sorbet.models.SureBet;
 import it.lf.sorbet.services.SureBetService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SureBetServiceImpl implements SureBetService {
 
     private static Logger LOG = LogManager.getLogger(SureBetServiceImpl.class);

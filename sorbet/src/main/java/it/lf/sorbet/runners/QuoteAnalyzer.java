@@ -1,4 +1,4 @@
-package it.lf.sorbet;
+package it.lf.sorbet.runners;
 
 import it.lf.sorbet.models.Bookmaker;
 import it.lf.sorbet.models.Quote;
@@ -12,6 +12,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class QuoteAnalyzer
 {
     private static final Logger LOG = LogManager.getLogger(QuoteAnalyzer.class);
@@ -27,7 +28,7 @@ public class QuoteAnalyzer
     private static SureBetService sureBetService = new SureBetServiceImpl();
     private static SportsMatchService sportsMatchService = new SportsMatchServiceImpl();
 
-    public static void main( String[] args ) {
+    public void run() {
         List<Quote> quotes = loadQuotes();
         for (SportsMatch sportsMatch : sportsMatchService.findAndAssignAllSportMatchesAndQuotes(quotes)) {
             SureBet surebet = sureBetService.getSureBet(sportsMatch);

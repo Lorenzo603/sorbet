@@ -8,15 +8,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Service
 public class WilliamHillCrawler implements Crawler{
 
     private static Logger LOG = LogManager.getLogger(WilliamHillCrawler.class);
+
+    @Override
+    public String getBookmakerId() {
+        return "WilliamHill";
+    }
 
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<Quote>();

@@ -5,6 +5,7 @@ import it.lf.sorbet.models.SportsMatch;
 
 import java.util.List;
 
+
 public interface SportsMatchService {
 
     List<SportsMatch> findAndAssignAllSportMatchesAndQuotes(List<Quote> quotes);

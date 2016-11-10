@@ -1,74 +1,52 @@
-package it.lf.sorbet;
+package it.lf.sorbet.runners;
 
 import it.lf.sorbet.crawlers.Crawler;
-import it.lf.sorbet.crawlers.impl.*;
 import it.lf.sorbet.models.Bookmaker;
 import it.lf.sorbet.models.Quote;
-import it.lf.sorbet.models.SportsMatch;
-import it.lf.sorbet.models.SureBet;
-import it.lf.sorbet.services.SportsMatchService;
-import it.lf.sorbet.services.SureBetService;
-import it.lf.sorbet.services.impl.SportsMatchServiceImpl;
-import it.lf.sorbet.services.impl.SureBetServiceImpl;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
-import java.io.FileReader;
+import javax.annotation.Resource;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Component
 public class QuoteCrawler
 {
     private static final Logger LOG = LogManager.getLogger(QuoteCrawler.class);
 
-    private static SureBetService sureBetService = new SureBetServiceImpl();
-    private static SportsMatchService sportsMatchService = new SportsMatchServiceImpl();
+    @Resource(name = "crawlers")
+    private List<Crawler> crawlers;
 
-    public static void main( String[] args ) {
+    public void run() {
 
         List<Quote> quotes = new ArrayList<Quote>();
 
-        Bookmaker bm1 = new Bookmaker();
-        bm1.setId("BWin");
-        bm1.setCrawler(new BWinCrawler());
-        crawlPage(quotes, bm1);
+        for (Crawler crawler : crawlers) {
+            Bookmaker bm = new Bookmaker();
+            String bookmakerId = crawler.getBookmakerId();
+            bm.setId(bookmakerId);
+            bm.setCrawler(crawler);
+            LOG.info("Started crawler: " + bookmakerId);
+            try {
+                crawlPage(quotes, bm);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
 
-        Bookmaker bm2 = new Bookmaker();
-        bm2.setId("EuroBet");
-        bm2.setCrawler(new EuroBetCrawler());
-        crawlPage(quotes, bm2);
-
-        Bookmaker bm3 = new Bookmaker();
-        bm3.setId("WilliamHill");
-        bm3.setCrawler(new WilliamHillCrawler());
-        crawlPage(quotes, bm3);
-
-        Bookmaker bm4 = new Bookmaker();
-        bm4.setId("BetFair");
-        bm4.setCrawler(new BetFairCrawler());
-        crawlPage(quotes, bm4);
-
-        Bookmaker bm5 = new Bookmaker();
-        bm5.setId("Snai");
-        bm5.setCrawler(new SnaiCrawler());
-        crawlPage(quotes, bm5);
-
-        Bookmaker bm6 = new Bookmaker();
-        bm6.setId("GazzaBet");
-        bm6.setCrawler(new GazzaBetCrawler());
-        crawlPage(quotes, bm6);
+            LOG.info("Finished crawler: " + bookmakerId);
+        }
 
         writeQuotes(quotes);
     }
 
-    private static void crawlPage(List<Quote> quotes, Bookmaker bookmaker) {
+    private void crawlPage(List<Quote> quotes, Bookmaker bookmaker) {
         List<Quote> crawledQuotes = bookmaker.getCrawler().crawl();
 
         for (Quote quote : crawledQuotes) {
@@ -78,7 +56,8 @@ public class QuoteCrawler
         quotes.addAll(crawledQuotes);
     }
 
-    private static void writeQuotes(List<Quote> quotes) {
+    private void writeQuotes(List<Quote> quotes) {
+        LOG.info("Started writing quotes file");
         FileWriter fileWriter = null;
         CSVPrinter csvPrinter = null;
         try {
@@ -109,4 +88,5 @@ public class QuoteCrawler
         }
 
     }
+
 }

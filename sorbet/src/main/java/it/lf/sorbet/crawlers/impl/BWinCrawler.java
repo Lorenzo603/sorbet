@@ -8,15 +8,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BWinCrawler implements Crawler  {
+@Service
+public class BwinCrawler implements Crawler  {
 
-    private static Logger LOG = LogManager.getLogger(BWinCrawler.class);
+    private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
+
+    @Override
+    public String getBookmakerId() {
+        return "Bwin";
+    }
 
     public List<Quote> crawl() {
         final List<Quote> quotes = new ArrayList<Quote>();
