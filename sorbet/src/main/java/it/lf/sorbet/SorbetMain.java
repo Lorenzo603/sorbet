@@ -18,13 +18,6 @@ public class SorbetMain {
 
     public static void main( String[] args ) {
         ApplicationContext ctx = SpringApplication.run(SorbetMain.class, args);
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
 
         if (ArrayUtils.contains(args, "crawl")) {
             ((QuoteCrawler) ctx.getBean("quoteCrawler")).run();
@@ -33,6 +26,7 @@ public class SorbetMain {
         } else {
             LOG.error("Wrong starting parameter. Specify either 'crawl' or 'analyze'");
         }
+
     }
 
 }

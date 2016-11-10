@@ -15,19 +15,20 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class BwinCrawler implements Crawler  {
+public class BwinCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
 
     @Override
     public String getBookmakerId() {
-        return "Bwin";
+        return "BWin";
     }
 
     public List<Quote> crawl() {
+
         final List<Quote> quotes = new ArrayList<>();
 
-        String url = "https://sports.bwin.com/en/sports#sportId=4";
+        String url = getCrawlerConfig().getString("url");
 
         try {
 
