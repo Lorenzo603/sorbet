@@ -42,7 +42,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
             quote.setSportsMatch(retrievedSportsMatch);
             retrievedSportsMatch.getQuotes().add(quote);
         } else {
-            SportsMatch similarSportsMatch = findSimilarSportsMatch(quote, String key);
+            SportsMatch similarSportsMatch = findSimilarSportsMatch(quote, key);
             if (similarSportsMatch != null) {
                 quote.setSportsMatch(similarSportsMatch);
                 similarSportsMatch.getQuotes().add(quote);
