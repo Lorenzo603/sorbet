@@ -19,6 +19,6 @@ public class StringSimilarityServiceImpl implements StringSimilarityService {
 
     @Override
     public boolean areSimilar(String s1, String s2) {
-        return false;
+        return getSimilarityCoefficient(s1, s2) > 0.74;
     }
 }

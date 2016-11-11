@@ -30,9 +30,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
         }
 
         List<SportsMatch> sportsMatches = new ArrayList<SportsMatch>();
-        for (SportsMatch sm : sportsMatchHashMap.values()) {
-            sportsMatches.add(sm);
-        }
+        sportsMatches.addAll(sportsMatchHashMap.values());
         return sportsMatches;
     }
 
@@ -78,11 +76,11 @@ public class SportsMatchServiceImpl implements SportsMatchService {
     private String generateSportsMatchMapKey(String aliasTeam1, String aliasTeam2) {
         String team1 = teamService.getTeamIdByAlias(aliasTeam1);
         if (team1 == null) {
-            throw new RuntimeException("Team with alias " + aliasTeam1 + " not found.");
+            team1 = aliasTeam1;
         }
         String team2 = teamService.getTeamIdByAlias(aliasTeam2);
         if (team2 == null) {
-            throw new RuntimeException("Team with alias " + aliasTeam2 + " not found.");
+            team2 = aliasTeam2;
         }
         return team1 + team2;
     }
