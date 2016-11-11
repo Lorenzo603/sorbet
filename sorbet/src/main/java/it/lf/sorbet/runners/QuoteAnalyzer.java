@@ -44,6 +44,11 @@ public class QuoteAnalyzer
                 LOG.info("Bookmaker Q1: " + surebet.getBookmakerQ1().getId());
                 LOG.info("Bookmaker D: " + surebet.getBookmakerD().getId());
                 LOG.info("Bookmaker Q2: " + surebet.getBookmakerQ2().getId());
+                LOG.info("SureBet Quotes ---");
+                for (Quote quote : surebet.getSportsMatch().getQuotes()) {
+                    LOG.info(quote.getAliasTeam1() + "$$$" + quote.getAliasTeam2());
+                }
+
             }
         }
     }
