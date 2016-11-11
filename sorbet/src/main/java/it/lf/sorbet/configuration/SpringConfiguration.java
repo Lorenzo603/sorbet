@@ -28,8 +28,9 @@ public class SpringConfiguration {
     @Bean
     public List<Crawler> crawlers(){
         return Arrays.asList(
-                betFairCrawler,
-                bwinCrawler
+                //betFairCrawler,
+                //bwinCrawler,
+                euroBetCrawler
                 //snaiCrawler
         );
     }
