@@ -16,6 +16,10 @@ public class SureBetServiceImpl implements SureBetService {
     private static Logger LOG = LogManager.getLogger(SureBetServiceImpl.class);
 
     public SureBet getSureBet(SportsMatch sportsMatch) {
+        if (sportsMatch.getQuotes().size() > 2) {
+            return null;
+        }
+
         double bestQ1 = Double.MIN_VALUE;
         double bestD = Double.MIN_VALUE;
         double bestQ2 = Double.MIN_VALUE;

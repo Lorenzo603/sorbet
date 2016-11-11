@@ -4,6 +4,7 @@ import info.debatty.java.stringsimilarity.Levenshtein;
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.services.SportsMatchService;
+import it.lf.sorbet.services.StringSimilarityService;
 import it.lf.sorbet.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,11 @@ import java.util.List;
 public class SportsMatchServiceImpl implements SportsMatchService {
 
     @Autowired
+    private StringSimilarityService stringSimilarityService;
+    @Autowired
     private TeamService teamService;
 
     private HashMap<String, SportsMatch> sportsMatchHashMap;
-
-    private Levenshtein levenshtein = new Levenshtein();
 
     public List<SportsMatch> findAndAssignAllSportMatchesAndQuotes(List<Quote> quotes) {
         sportsMatchHashMap = new HashMap<String, SportsMatch>();
@@ -41,7 +42,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
             quote.setSportsMatch(retrievedSportsMatch);
             retrievedSportsMatch.getQuotes().add(quote);
         } else {
-            SportsMatch similarSportsMatch = findSportsMatchWithSimilarKey(key);
+            SportsMatch similarSportsMatch = findSimilarSportsMatch(quote, String key);
             if (similarSportsMatch != null) {
                 quote.setSportsMatch(similarSportsMatch);
                 similarSportsMatch.getQuotes().add(quote);
@@ -56,17 +57,17 @@ public class SportsMatchServiceImpl implements SportsMatchService {
         }
     }
 
-    private SportsMatch findSportsMatchWithSimilarKey(String key) {
-        for (String existingKey : sportsMatchHashMap.keySet()) {
-            if (areSimilar(existingKey, key)) {
-                return sportsMatchHashMap.get(existingKey);
+    private SportsMatch findSimilarSportsMatch(Quote quote, String key) {
+        if (stringSimilarityService.areSimilar(quote.getAliasTeam1(), key.split("\\|\\|\\|")[0])
+            && stringSimilarityService.areSimilar(quote.getAliasTeam2(), key.split("\\|\\|\\|")[1])) {
+            for (String existingKey : sportsMatchHashMap.keySet()) {
+                if (stringSimilarityService.areSimilar(existingKey, key)) {
+                    return sportsMatchHashMap.get(existingKey);
+                }
             }
         }
-        return null;
-    }
 
-    private boolean areSimilar(String existingKey, String key) {
-        return levenshtein.distance(existingKey, key) > 0.95;
+        return null;
     }
 
     private String generateSportsMatchMapKeyFromQuote(Quote quote) {
@@ -82,7 +83,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
         if (team2 == null) {
             team2 = aliasTeam2;
         }
-        return team1 + team2;
+        return team1 + "|||" + team2;
     }
 
 }
