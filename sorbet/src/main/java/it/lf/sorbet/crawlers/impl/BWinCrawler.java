@@ -45,8 +45,6 @@ public class BwinCrawler extends AbstractCrawler {
             Document doc = Jsoup.parse(driver.getPageSource());
             Elements matches = doc.select(".marketboard-event-group__item--event");
 
-            LOG.debug(doc.toString());
-
             matches.forEach(element -> {
                 Elements match = element.select(".mb-option-button__option-odds");
                 Quote quote = new Quote();

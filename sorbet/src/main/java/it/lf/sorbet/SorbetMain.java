@@ -2,6 +2,7 @@ package it.lf.sorbet;
 
 import it.lf.sorbet.runners.QuoteAnalyzer;
 import it.lf.sorbet.runners.QuoteCrawler;
+import it.lf.sorbet.runners.TeamMapGenerator;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,8 @@ public class SorbetMain {
             ((QuoteCrawler) ctx.getBean("quoteCrawler")).run();
         } else if (ArrayUtils.contains(args, "analyze")) {
             ((QuoteAnalyzer) ctx.getBean("quoteAnalyzer")).run();
+        } else if (ArrayUtils.contains(args, "generateTeamMap")) {
+            ((TeamMapGenerator) ctx.getBean("teamMapGenerator")).run();
         } else {
             LOG.error("Wrong starting parameter. Specify either 'crawl' or 'analyze'");
         }

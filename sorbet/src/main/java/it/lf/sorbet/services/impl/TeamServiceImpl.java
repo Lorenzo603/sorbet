@@ -1,6 +1,5 @@
 package it.lf.sorbet.services.impl;
 
-import it.lf.sorbet.models.Team;
 import it.lf.sorbet.services.TeamService;
 
 import java.util.Arrays;
@@ -9,6 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 public class TeamServiceImpl implements TeamService {
+
+    public String getTeamIdByAlias(String alias) {
+        for (String id : teamMap.keySet()) {
+            List<String> aliases = teamMap.get(id);
+            if (aliases.contains(alias)) {
+                return id;
+            }
+        }
+        return null;
+    }
 
     private static final Map<String, List<String>> teamMap;
     static
@@ -37,14 +46,6 @@ public class TeamServiceImpl implements TeamService {
 
     }
 
-    public String getTeamIdByAlias(String alias) {
-        for (String id : teamMap.keySet()) {
-            List<String> aliases = teamMap.get(id);
-            if (aliases.contains(alias)) {
-                return id;
-            }
-        }
-        return null;
-    }
+
 
 }

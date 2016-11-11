@@ -2,6 +2,8 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.crawlers.Crawler;
 import it.lf.sorbet.models.Quote;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -46,11 +48,33 @@ public class BetFairCrawler extends AbstractCrawler {
             Elements matches = doc.select(".event-information");
 
             matches.forEach(element -> {
+                try {
+
+                } catch (Exception e) {
+                    LOG.error("Connection exception", e);
+                }
                 Elements prices = element.select("li");
                 Quote quote = new Quote();
-                quote.setQ1(Double.valueOf(prices.get(0).select("span").text()));
-                quote.setD(Double.valueOf(prices.get(1).select("span").text()));
-                quote.setQ2(Double.valueOf(prices.get(2).select("span").text()));
+                String q1 = parseOdd(prices.get(0).select("span").text());
+                try {
+                    quote.setQ1(Double.valueOf(q1));
+                } catch (Exception e) {
+                    return;
+                }
+
+                String d = parseOdd(prices.get(1).select("span").text());
+                try {
+                    quote.setD(Double.valueOf(d));
+                } catch (Exception e) {
+                    return;
+                }
+
+                String q2 = parseOdd(prices.get(2).select("span").text());
+                try {
+                    quote.setQ2(Double.valueOf(q2));
+                } catch (Exception e) {
+                    return;
+                }
 
                 quote.setAliasTeam1(element.select(".home-team-name").text());
                 quote.setAliasTeam2(element.select(".away-team-name").text());

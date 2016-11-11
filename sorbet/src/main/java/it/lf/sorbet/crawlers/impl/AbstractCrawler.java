@@ -5,6 +5,7 @@ import it.lf.sorbet.crawlers.Crawler;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -28,6 +29,13 @@ public abstract class AbstractCrawler implements Crawler {
             LOG.error("Error loading Configuration properties for crawler of Bookmaker: " + bookmakerId, ce);
         }
         return null;
+    }
+
+    protected String parseOdd(String odd) {
+        if (StringUtils.isNotBlank(odd)) {
+            return  odd.replace(',', '.');
+        }
+        return StringUtils.EMPTY;
     }
 
 }
