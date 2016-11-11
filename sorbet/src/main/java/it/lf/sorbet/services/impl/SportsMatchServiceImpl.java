@@ -1,9 +1,11 @@
 package it.lf.sorbet.services.impl;
 
+import info.debatty.java.stringsimilarity.Levenshtein;
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.services.SportsMatchService;
 import it.lf.sorbet.services.TeamService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,8 +16,12 @@ import java.util.List;
 @Service
 public class SportsMatchServiceImpl implements SportsMatchService {
 
+    @Autowired
+    private TeamService teamService;
+
     private HashMap<String, SportsMatch> sportsMatchHashMap;
-    private TeamService teamService = new TeamServiceImpl();
+
+    private Levenshtein levenshtein = new Levenshtein();
 
     public List<SportsMatch> findAndAssignAllSportMatchesAndQuotes(List<Quote> quotes) {
         sportsMatchHashMap = new HashMap<String, SportsMatch>();
@@ -35,20 +41,34 @@ public class SportsMatchServiceImpl implements SportsMatchService {
         SportsMatch retrievedSportsMatch = sportsMatchHashMap.get(key);
         if (retrievedSportsMatch != null) {
             quote.setSportsMatch(retrievedSportsMatch);
-            List<Quote> previousQuotes = retrievedSportsMatch.getQuotes();
-            if (previousQuotes == null) {
-                previousQuotes = new ArrayList<Quote>();
-            }
-            previousQuotes.add(quote);
-            retrievedSportsMatch.setQuotes(previousQuotes);
+            retrievedSportsMatch.getQuotes().add(quote);
         } else {
-            SportsMatch sportsMatch = new SportsMatch();
-            sportsMatch.setAliasTeam1(quote.getAliasTeam1());
-            sportsMatch.setAliasTeam2(quote.getAliasTeam2());
-            quote.setSportsMatch(sportsMatch);
-            sportsMatch.setQuotes(new ArrayList<Quote>(Arrays.asList(quote)));
-            sportsMatchHashMap.put(key, sportsMatch);
+            SportsMatch similarSportsMatch = findSportsMatchWithSimilarKey(key);
+            if (similarSportsMatch != null) {
+                quote.setSportsMatch(similarSportsMatch);
+                similarSportsMatch.getQuotes().add(quote);
+            } else {
+                SportsMatch sportsMatch = new SportsMatch();
+                sportsMatch.setAliasTeam1(quote.getAliasTeam1());
+                sportsMatch.setAliasTeam2(quote.getAliasTeam2());
+                quote.setSportsMatch(sportsMatch);
+                sportsMatch.setQuotes(new ArrayList<Quote>(Arrays.asList(quote)));
+                sportsMatchHashMap.put(key, sportsMatch);
+            }
         }
+    }
+
+    private SportsMatch findSportsMatchWithSimilarKey(String key) {
+        for (String existingKey : sportsMatchHashMap.keySet()) {
+            if (areSimilar(existingKey, key)) {
+                return sportsMatchHashMap.get(existingKey);
+            }
+        }
+        return null;
+    }
+
+    private boolean areSimilar(String existingKey, String key) {
+        return levenshtein.distance(existingKey, key) > 0.95;
     }
 
     private String generateSportsMatchMapKeyFromQuote(Quote quote) {

@@ -1,12 +1,14 @@
 package it.lf.sorbet.services.impl;
 
 import it.lf.sorbet.services.TeamService;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class TeamServiceImpl implements TeamService {
 
     public String getTeamIdByAlias(String alias) {
@@ -38,7 +40,7 @@ public class TeamServiceImpl implements TeamService {
         teamMap.put("Juventus", Arrays.asList("Juventus"));
         teamMap.put("Fiorentina", Arrays.asList("Fiorentina", "Acf Fiorentina"));
         teamMap.put("Sampdoria", Arrays.asList("Sampdoria"));
-        teamMap.put("Inter Milan", Arrays.asList("Inter Milan", "Inter"));
+        teamMap.put("Inter Milan", Arrays.asList("Inter Milan", "Inter",  "FC Internazionale"));
         teamMap.put("Crotone", Arrays.asList("Crotone"));
         teamMap.put("AS Roma", Arrays.asList("AS Roma", "Roma"));
         teamMap.put("Bologna", Arrays.asList("Bologna"));
