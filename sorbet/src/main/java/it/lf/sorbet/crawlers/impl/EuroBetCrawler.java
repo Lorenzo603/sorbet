@@ -1,6 +1,7 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import org.apache.commons.collections.functors.ExceptionClosure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -8,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -44,35 +46,45 @@ public class EuroBetCrawler extends AbstractCrawler {
                     .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div[title='Serie A']")));
 
             Document doc = Jsoup.parse(driver.getPageSource());
-            Elements categories = doc.select(".left_menu_tipoSport_box_competizione_nome");
+            Elements categories = doc.select("#targetSport .left_menu_tipoSport_box_competizione_nome");
 
             categories.forEach(category -> {
                 (new WebDriverWait(driver, 10))
                         .until(ExpectedConditions.presenceOfElementLocated(By.id(category.id()))).click();
 
-                sleep(200);
+                Document categoryDoc = Jsoup.parse(driver.getPageSource());
 
-                Elements subcategories = category.select(".left_menu_tipoSport_box_competizione_categoria_nome");
+                Elements subcategories = categoryDoc.select(".left_menu_tipoSport_box_competizione_categoria_nome");
                 subcategories.forEach(subcategory -> {
-                    (new WebDriverWait(driver, 10))
-                            .until(ExpectedConditions.presenceOfElementLocated(By.id(subcategory.id()))).click();
+                    WebElement subcategoryElement = driver.findElement(By.id(subcategory.id()));
+                    if (subcategoryElement.isDisplayed()) {
+                        subcategoryElement.click();
+                        sleep(200);
 
-                    sleep(200);
+                        Document subcategoryDoc = Jsoup.parse(driver.getPageSource());
 
-                    Elements matches = category.select(".box_container_scommesse_evento");
-                    matches.forEach(element -> {
-                        Elements match = element.select(".box_container_scommesse_quoteType");
-                        Quote quote = new Quote();
-                        quote.setQ1(Double.valueOf(match.get(0).text()));
-                        quote.setD(Double.valueOf(match.get(1).text()));
-                        quote.setQ2(Double.valueOf(match.get(2).text()));
+                        Elements matches = subcategoryDoc.select(".box_container_scommesse_evento");
+                        matches.forEach(element -> {
+                            try {
+                                Elements match = element.select(".box_container_scommesse_quoteType");
+                                Quote quote = new Quote();
+                                quote.setQ1(Double.valueOf(match.get(0).text()));
+                                quote.setD(Double.valueOf(match.get(1).text()));
+                                quote.setQ2(Double.valueOf(match.get(2).text()));
 
-                        String teams = element.select(".box_container_scommesse_nomeEvento").select("a").text();
-                        quote.setAliasTeam1(teams.split("-")[0].trim());
-                        quote.setAliasTeam2(teams.split("-")[1].trim());
+                                String teams = element.select(".box_container_scommesse_nomeEvento").select("a").text();
+                                quote.setAliasTeam1(teams.split("-")[0].trim());
+                                quote.setAliasTeam2(teams.split("-")[1].trim());
 
-                        quotes.add(quote);
-                    });
+                                quotes.add(quote);
+                            } catch (Exception e) {
+                                LOG.error(e);
+                            }
+
+                        });
+                    }
+
+
                 });
 
 
