@@ -62,8 +62,9 @@ public class SnaiCrawler extends AbstractCrawler {
                 quote.setD(Double.valueOf(match.get(2).text().replace(',', '.')));
                 quote.setQ2(Double.valueOf(match.get(3).text().replace(',', '.')));
 
-                quote.setAliasTeam1(match.get(0).select("a").text().split("-")[0].trim());
-                quote.setAliasTeam2(match.get(0).select("a").text().split("-")[1].trim());
+                String[] teamsText = match.get(0).select("a").get(1).text().split("-");
+                quote.setAliasTeam1(teamsText[0].trim());
+                quote.setAliasTeam2(teamsText[1].trim());
 
                 quotes.add(quote);
             });
