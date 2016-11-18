@@ -1,6 +1,7 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -57,7 +58,7 @@ public class WilliamHillCrawler extends AbstractCrawler {
                         quote.setD(Double.valueOf(match.get(5).select(".eventprice").text()));
                         quote.setQ2(Double.valueOf(match.get(6).select(".eventprice").text()));
 
-                        String[] teamText = match.get(2).select("span").text().split("-");
+                        String[] teamText = StringEscapeUtils.unescapeHtml4(match.get(2).select("span").text()).split("-");
                         quote.setAliasTeam1(teamText[0].trim());
                         quote.setAliasTeam2(teamText[1].trim());
 
