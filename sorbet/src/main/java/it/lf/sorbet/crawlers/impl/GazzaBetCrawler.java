@@ -1,22 +1,22 @@
 package it.lf.sorbet.crawlers.impl;
 
-import it.lf.sorbet.crawlers.Crawler;
 import it.lf.sorbet.models.Quote;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Service
-public class GazzaBetCrawler implements Crawler {
+public class GazzaBetCrawler extends AbstractCrawler {
     private static Logger LOG = LogManager.getLogger(GazzaBetCrawler.class);
 
     @Override
@@ -25,33 +25,51 @@ public class GazzaBetCrawler implements Crawler {
     }
 
     public List<Quote> crawl() {
-        final List<Quote> quotes = new ArrayList<Quote>();
-
-        String url = "http://sports.gazzabet.it/it/t/19159/Italia-Serie-A";
+        final List<Quote> quotes = new ArrayList<>();
 
         try {
+            String url = getCrawlerConfig().getString("url");
+            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
+            WebDriver driver = getWebDriver();
 
-            Document doc = Jsoup.connect(url).get();
-            Elements matches = doc.select(".mkt_content");
+            driver.get(url);
 
-            matches.forEach(new Consumer<Element>() {
-                public void accept(Element element) {
-                    Elements prices = element.select("td");
-                    Quote quote = new Quote();
-                    quote.setQ1(Double.valueOf(prices.get(3).select(".price").get(1).text()));
-                    quote.setD(Double.valueOf(prices.get(4).select(".price").get(1).text()));
-                    quote.setQ2(Double.valueOf(prices.get(5).select(".price").get(1).text()));
+            List<String> links = new ArrayList<>();
+            List<WebElement> subcategories = driver.findElements(By.cssSelector("#nav-area .sport-FOOT .expander-content > .expander a"));
+            for (WebElement subcategory : subcategories) {
+                links.add(subcategory.getAttribute("href"));
+            }
 
-                    Elements teams = element.select(".mb-option-button__option-name");
-                    quote.setAliasTeam1(prices.get(3).select(".seln-name").text());
-                    quote.setAliasTeam2(prices.get(5).select(".seln-name").text());
+            for (String subcategoryUrl : links) {
+                driver.get(subcategoryUrl);
+                sleep(200);
+                Document doc = Jsoup.parse(driver.getPageSource());
+                Elements matches = doc.select(".coupon .mkt_content");
 
-                    quotes.add(quote);
-                }
-            });
+                matches.forEach(element -> {
+                    try {
+                        Elements prices = element.select("td");
+                        Quote quote = new Quote();
+                        quote.setQ1(Double.valueOf(prices.get(3).select(".price .dec").text()));
+                        quote.setD(Double.valueOf(prices.get(4).select(".price .dec").text()));
+                        quote.setQ2(Double.valueOf(prices.get(5).select(".price .dec").text()));
 
-        } catch (IOException e) {
+                        quote.setAliasTeam1(prices.get(3).select(".seln-name").text());
+                        quote.setAliasTeam2(prices.get(5).select(".seln-name").text());
+
+                        quotes.add(quote);
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage());
+                    }
+
+                });
+            }
+
+
+        } catch (Exception e) {
             LOG.error("Connection exception", e);
+        } finally {
+            getWebDriver().quit();
         }
 
         return quotes;
