@@ -48,10 +48,8 @@ public class SnaiCrawler extends AbstractCrawler {
                     .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='CALCIO_0']"))).click();
             Thread.sleep(1000);
             (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='CALCIO_ITALIA_2']"))).click();
-            Thread.sleep(1000);
-            (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#CALCIO_ITALIA_2 .list-group a"))).click();
+                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".btn-group-justified")));
+            driver.findElement(By.cssSelector(".btn-group-justified")).findElements(By.tagName("a")).get(2).click();
             Thread.sleep(5000);
 
             Document doc = Jsoup.parse(driver.getPageSource());

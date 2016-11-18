@@ -38,10 +38,7 @@ public class BwinCrawler extends AbstractCrawler {
             driver = new FirefoxDriver();
 
             driver.get(url);
-            (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#nav-sport-4"))).click();
-            Thread.sleep(2000);
-
+            sleep(400);
             Document doc = Jsoup.parse(driver.getPageSource());
             Elements matches = doc.select(".marketboard-event-group__item--event");
 
