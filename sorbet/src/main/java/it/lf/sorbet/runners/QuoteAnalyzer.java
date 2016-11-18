@@ -31,24 +31,26 @@ public class QuoteAnalyzer
 
     public void run() {
         List<Quote> quotes = loadQuotes();
-        for (SportsMatch sportsMatch : sportsMatchService.findAndAssignAllSportMatchesAndQuotes(quotes)) {
-            SureBet surebet = sureBetService.getSureBet(sportsMatch);
-            if (surebet != null) {
-                LOG.info("----------  SureBet found ----------");
-                LOG.info("sports Match: " + surebet.getSportsMatch().getAliasTeam1() + " - " + surebet.getSportsMatch().getAliasTeam2());
-                LOG.info("Coefficient: " + surebet.getSureBetCoefficient());
-                LOG.info("Return percentage: " + surebet.getReturnPercentage());
-                LOG.info("Bet Q1: " + surebet.getBetQ1());
-                LOG.info("Bet D: " + surebet.getBetD());
-                LOG.info("Bet Q2: " + surebet.getBetQ2());
-                LOG.info("Bookmaker Q1: " + surebet.getBookmakerQ1().getId());
-                LOG.info("Bookmaker D: " + surebet.getBookmakerD().getId());
-                LOG.info("Bookmaker Q2: " + surebet.getBookmakerQ2().getId());
-                LOG.info("SureBet Quotes ---");
-                for (Quote quote : surebet.getSportsMatch().getQuotes()) {
-                    LOG.info(quote.getAliasTeam1() + "$$$" + quote.getAliasTeam2());
-                }
+        if (quotes != null) {
+            for (SportsMatch sportsMatch : sportsMatchService.findAndAssignAllSportMatchesAndQuotes(quotes)) {
+                SureBet surebet = sureBetService.getSureBet(sportsMatch);
+                if (surebet != null && sportsMatch.getQuotes().size() <= 3) {
+                    LOG.info("----------  SureBet found ----------");
+                    LOG.info("sports Match: " + surebet.getSportsMatch().getAliasTeam1() + " - " + surebet.getSportsMatch().getAliasTeam2());
+                    LOG.info("Coefficient: " + surebet.getSureBetCoefficient());
+                    LOG.info("Return percentage: " + surebet.getReturnPercentage());
+                    LOG.info("Bet Q1: " + surebet.getBetQ1());
+                    LOG.info("Bet D: " + surebet.getBetD());
+                    LOG.info("Bet Q2: " + surebet.getBetQ2());
+                    LOG.info("Bookmaker Q1: " + surebet.getBookmakerQ1().getId());
+                    LOG.info("Bookmaker D: " + surebet.getBookmakerD().getId());
+                    LOG.info("Bookmaker Q2: " + surebet.getBookmakerQ2().getId());
+                    LOG.info("SureBet Quotes ---");
+                    for (Quote quote : surebet.getSportsMatch().getQuotes()) {
+                        LOG.info(quote.getAliasTeam1() + "$$$" + quote.getAliasTeam2());
+                    }
 
+                }
             }
         }
     }
