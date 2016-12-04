@@ -15,7 +15,7 @@ public class SpringConfiguration {
     @Autowired
     private BetFairCrawler betFairCrawler;
     @Autowired
-    private BwinCrawler bwinCrawler;
+    private BWinCrawler bwinCrawler;
     @Autowired
     private EuroBetCrawler euroBetCrawler;
     @Autowired
@@ -28,12 +28,12 @@ public class SpringConfiguration {
     @Bean
     public List<Crawler> crawlers(){
         return Arrays.asList(
-                //betFairCrawler
-                //bwinCrawler
-                //euroBetCrawler
-                //snaiCrawler
-                //gazzaBetCrawler
-                williamHillCrawler
+                betFairCrawler,
+                bwinCrawler,
+                euroBetCrawler,
+                snaiCrawler,
+                gazzaBetCrawler
+                //williamHillCrawler
         );
     }
 

@@ -6,11 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class BwinCrawler extends AbstractCrawler {
+public class BWinCrawler extends AbstractCrawler {
 
-    private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
+    private static Logger LOG = LogManager.getLogger(BWinCrawler.class);
 
     @Override
     public String getBookmakerId() {

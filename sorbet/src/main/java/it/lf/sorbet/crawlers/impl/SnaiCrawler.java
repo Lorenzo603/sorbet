@@ -1,7 +1,6 @@
 package it.lf.sorbet.crawlers.impl;
 
 
-import it.lf.sorbet.crawlers.Crawler;
 import it.lf.sorbet.models.Quote;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ import java.util.List;
 @Service
 public class SnaiCrawler extends AbstractCrawler {
 
-    private static Logger LOG = LogManager.getLogger(BwinCrawler.class);
+    private static Logger LOG = LogManager.getLogger(SnaiCrawler.class);
 
     @Override
     public String getBookmakerId() {
