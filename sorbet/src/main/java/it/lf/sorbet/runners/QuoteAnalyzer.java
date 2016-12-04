@@ -59,7 +59,7 @@ public class QuoteAnalyzer
         List<Quote> quotes = new ArrayList<Quote>();
 
         try {
-            Reader in = new FileReader("C:\\quotes.csv");
+            Reader in = new FileReader("C:\\p\\quotes.csv");
             Iterable<CSVRecord> records = null;
             records = CSVFormat.EXCEL.parse(in);
             for (CSVRecord record : records) {
