@@ -24,13 +24,19 @@ public class BWinCrawler extends AbstractCrawler {
         return "BWin";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
 
         final List<Quote> quotes = new ArrayList<>();
 
         WebDriver driver = null;
         try {
-            String url = getCrawlerConfig().getString("url");
+            String url = "";
+            if ("soccer".equals(sport)) {
+                url = "https://sports.bwin.com/en/sports#sportId=4";
+            } else if ("tennis".equals(sport)){
+                url = "https://sports.bwin.com/en/sports#sportId=5";
+            }
+
             driver = getWebDriver();
 
             driver.get(url);

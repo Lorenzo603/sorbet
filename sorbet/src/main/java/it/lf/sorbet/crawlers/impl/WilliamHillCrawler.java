@@ -27,7 +27,7 @@ public class WilliamHillCrawler extends AbstractCrawler {
         return "WilliamHill";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<>();
 
         WebDriver driver = null;

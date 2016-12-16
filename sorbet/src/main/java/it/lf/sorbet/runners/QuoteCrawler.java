@@ -24,7 +24,7 @@ public class QuoteCrawler
     @Resource(name = "crawlers")
     private List<Crawler> crawlers;
 
-    public void run() {
+    public void run(String sport) {
 
         for (Crawler crawler : crawlers) {
             List<Quote> quotes = new ArrayList<Quote>();
@@ -33,7 +33,7 @@ public class QuoteCrawler
             bm.setId(bookmakerId);
             bm.setCrawler(crawler);
             LOG.info("Started crawler: " + bookmakerId);
-            List<Quote> crawledQuotes = crawler.crawl();
+            List<Quote> crawledQuotes = crawler.crawl(sport);
             associateBookmakerToQuotes(bm, crawledQuotes);
             quotes.addAll(crawledQuotes);
             LOG.info("Finished crawler: " + bookmakerId);

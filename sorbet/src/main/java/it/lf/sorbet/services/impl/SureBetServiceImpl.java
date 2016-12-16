@@ -56,7 +56,7 @@ public class SureBetServiceImpl implements SureBetService {
             }
             sureBet.setTotalBet(totalBet);
 
-            for (int i = 0; i< bookmakers.length; i++) {
+            for (int i = 0; i < bookmakers.length; i++) {
                 sureBet.addBookmaker(bookmakers[i]);
             }
 

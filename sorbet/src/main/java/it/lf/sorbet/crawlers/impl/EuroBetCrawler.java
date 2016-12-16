@@ -26,7 +26,7 @@ public class EuroBetCrawler extends AbstractCrawler {
         return "EuroBet";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<Quote>();
 
         try {

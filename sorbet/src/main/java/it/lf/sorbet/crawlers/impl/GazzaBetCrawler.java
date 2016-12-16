@@ -23,7 +23,7 @@ public class GazzaBetCrawler extends AbstractCrawler {
         return "GazzaBet";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<>();
 
         try {

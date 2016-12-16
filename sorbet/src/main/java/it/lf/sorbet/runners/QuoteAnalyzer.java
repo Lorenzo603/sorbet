@@ -13,11 +13,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class QuoteAnalyzer
@@ -43,7 +46,7 @@ public class QuoteAnalyzer
                         LOG.info("Bets: " + bet);
                     }
                     for (Bookmaker bookmaker : surebet.getBookmakers()) {
-                        LOG.info("Bookmakers: " + bookmaker);
+                        LOG.info("Bookmakers: " + bookmaker.getId());
                     }
 
                     LOG.info("SureBet Quotes ---");
@@ -60,23 +63,25 @@ public class QuoteAnalyzer
         List<Quote> quotes = new ArrayList<Quote>();
 
         try {
-            Reader in = new FileReader("C:\\p\\quotes.csv");
-            Iterable<CSVRecord> records = null;
-            records = CSVFormat.EXCEL.parse(in);
-            for (CSVRecord record : records) {
-                Quote quote = new Quote();
-                Bookmaker bookmaker = new Bookmaker();
-                bookmaker.setId(record.get(0));
-                quote.setBookmaker(bookmaker);
-                quote.setAlias1(record.get(1));
-                quote.setAlias2(record.get(2));
-                for (int i = record.size() - 3; i <  record.size() ;i++) {
-                    quote.addValue(Double.valueOf(record.get(i)));
+            File quoteDir = new File("C:\\p");
+            for (File file : Arrays.stream(quoteDir.listFiles()).filter(f -> f.getName().endsWith(".csv")).collect(Collectors.toList())) {
+                Reader in = new FileReader(file);
+                Iterable<CSVRecord> records = null;
+                records = CSVFormat.EXCEL.parse(in);
+                for (CSVRecord record : records) {
+                    Quote quote = new Quote();
+                    Bookmaker bookmaker = new Bookmaker();
+                    bookmaker.setId(record.get(0));
+                    quote.setBookmaker(bookmaker);
+                    quote.setAlias1(record.get(1));
+                    quote.setAlias2(record.get(2));
+                    for (int i = record.size() - 3; i <  record.size() ;i++) {
+                        quote.addValue(Double.valueOf(record.get(i)));
+                    }
+                    quotes.add(quote);
                 }
-                quotes.add(quote);
+                return quotes;
             }
-            return quotes;
-
         } catch (IOException e) {
             e.printStackTrace();
         }

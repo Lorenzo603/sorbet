@@ -25,7 +25,7 @@ public class BetFairCrawler extends AbstractCrawler {
         return "BetFair";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<>();
 
         try {

@@ -6,7 +6,7 @@ public interface Crawler {
 
     String getBookmakerId();
 
-    List crawl();
+    List crawl(String sport);
 
 
 }

@@ -28,7 +28,7 @@ public class SnaiCrawler extends AbstractCrawler {
         return "Snai";
     }
 
-    public List<Quote> crawl() {
+    public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<>();
 
         WebDriver driver = null;
