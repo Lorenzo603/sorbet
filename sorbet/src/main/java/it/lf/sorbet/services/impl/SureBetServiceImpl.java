@@ -17,31 +17,29 @@ public class SureBetServiceImpl implements SureBetService {
 
     public SureBet getSureBet(SportsMatch sportsMatch) {
 
-        double bestQ1 = Double.MIN_VALUE;
-        double bestD = Double.MIN_VALUE;
-        double bestQ2 = Double.MIN_VALUE;
+        double[] bestValues = new double[sportsMatch.getQuotes().get(0).getValues().size()];
+        for (int i = 0; i < bestValues.length; i++) {
+            bestValues[i] = Double.MIN_VALUE;
+        }
 
-        Bookmaker bookmakerQ1 = null;
-        Bookmaker bookmakerD = null;
-        Bookmaker bookmakerQ2 = null;
+        Bookmaker[] bookmakers = new Bookmaker[bestValues.length];
 
         for (Quote quote : sportsMatch.getQuotes()) {
-            if (quote.getQ1() > bestQ1) {
-                bestQ1 = quote.getQ1();
-                bookmakerQ1 = quote.getBookmaker();
-            }
-            if (quote.getD() > bestD) {
-                bestD = quote.getD();
-                bookmakerD = quote.getBookmaker();
-            }
-            if (quote.getQ2() > bestQ2) {
-                bestQ2 = quote.getQ2();
-                bookmakerQ2 = quote.getBookmaker();
+            for (int i = 0; i < quote.getValues().size(); i ++) {
+                if (quote.getValues().get(i) > bestValues[i]) {
+                    bestValues[i] = quote.getValues().get(i);
+                    bookmakers[i] = quote.getBookmaker();
+                }
             }
         }
 
-        double surebetCoefficient = 1/bestQ1 + 1/bestD + 1/bestQ2;
-        LOG.info("Match " + sportsMatch.getAliasTeam1() + " - " + sportsMatch.getAliasTeam2() + " analyzed. Coefficient: " + surebetCoefficient);
+
+        double surebetCoefficient = 0;
+        for (int i = 0; i < bestValues.length; i++) {
+            surebetCoefficient += 1/bestValues[i];
+        }
+
+        LOG.info("Match " + sportsMatch.getAlias1() + " - " + sportsMatch.getAlias2() + " analyzed. Coefficient: " + surebetCoefficient);
         if (surebetCoefficient < 1.0) {
             double targetAmount = 100.00;
 
@@ -49,16 +47,19 @@ public class SureBetServiceImpl implements SureBetService {
             sureBet.setSureBetCoefficient(surebetCoefficient);
             sureBet.setReturnPercentage(1/surebetCoefficient);
 
-            double betQ1 = targetAmount/bestQ1;
-            sureBet.setBetQ1(betQ1);
-            double betD = targetAmount/bestD;
-            sureBet.setBetD(betD);
-            double betQ2 = targetAmount/bestQ2;
-            sureBet.setBetQ2(betQ2);
-            sureBet.setTotalBet(betQ1 + betD + betQ2);
-            sureBet.setBookmakerQ1(bookmakerQ1);
-            sureBet.setBookmakerD(bookmakerD);
-            sureBet.setBookmakerQ2(bookmakerQ2);
+            double bets[] = new double[bestValues.length];
+            double totalBet = 0;
+            for (int i = 0; i< bestValues.length; i++) {
+                bets[i] = targetAmount/bestValues[i];
+                sureBet.addBet(bets[i]);
+                totalBet += bets[i];
+            }
+            sureBet.setTotalBet(totalBet);
+
+            for (int i = 0; i< bookmakers.length; i++) {
+                sureBet.addBookmaker(bookmakers[i]);
+            }
+
             sureBet.setSportsMatch(sportsMatch);
 
             return sureBet;

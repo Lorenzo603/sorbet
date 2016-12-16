@@ -1,7 +1,6 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -10,7 +9,6 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
@@ -60,27 +58,27 @@ public class BetFairCrawler extends AbstractCrawler {
                     Quote quote = new Quote();
                     String q1 = parseOdd(prices.get(0).select("span").text());
                     try {
-                        quote.setQ1(Double.valueOf(q1));
+                        quote.addValue(Double.valueOf(q1));
                     } catch (Exception e) {
                         return;
                     }
 
                     String d = parseOdd(prices.get(1).select("span").text());
                     try {
-                        quote.setD(Double.valueOf(d));
+                        quote.addValue(Double.valueOf(d));
                     } catch (Exception e) {
                         return;
                     }
 
                     String q2 = parseOdd(prices.get(2).select("span").text());
                     try {
-                        quote.setQ2(Double.valueOf(q2));
+                        quote.addValue(Double.valueOf(q2));
                     } catch (Exception e) {
                         return;
                     }
 
-                    quote.setAliasTeam1(element.select(".home-team-name").text());
-                    quote.setAliasTeam2(element.select(".away-team-name").text());
+                    quote.setAlias1(element.select(".home-team-name").text());
+                    quote.setAlias2(element.select(".away-team-name").text());
 
                     quotes.add(quote);
                 });

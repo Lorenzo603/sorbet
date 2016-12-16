@@ -1,43 +1,26 @@
 package it.lf.sorbet.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SureBet {
 
-    private Bookmaker bookmakerQ1;
-    private Bookmaker bookmakerD;
-    private Bookmaker bookmakerQ2;
+    private List<Bookmaker> bookmakers = new ArrayList<>();
 
     private SportsMatch sportsMatch;
 
     private double sureBetCoefficient;
     private double returnPercentage;
 
-    private double betQ1;
-    private double betD;
-    private double betQ2;
+    private List<Double> bets = new ArrayList<>();
     private double totalBet;
 
-    public Bookmaker getBookmakerQ1() {
-        return bookmakerQ1;
+    public void addBookmaker(Bookmaker bookmaker) {
+        this.bookmakers.add(bookmaker);
     }
 
-    public void setBookmakerQ1(Bookmaker bookmakerQ1) {
-        this.bookmakerQ1 = bookmakerQ1;
-    }
-
-    public Bookmaker getBookmakerD() {
-        return bookmakerD;
-    }
-
-    public void setBookmakerD(Bookmaker bookmakerD) {
-        this.bookmakerD = bookmakerD;
-    }
-
-    public Bookmaker getBookmakerQ2() {
-        return bookmakerQ2;
-    }
-
-    public void setBookmakerQ2(Bookmaker bookmakerQ2) {
-        this.bookmakerQ2 = bookmakerQ2;
+    public List<Bookmaker> getBookmakers() {
+        return this.bookmakers;
     }
 
     public SportsMatch getSportsMatch() {
@@ -64,28 +47,12 @@ public class SureBet {
         this.returnPercentage = returnPercentage;
     }
 
-    public double getBetQ1() {
-        return betQ1;
+    public void addBet(Double bet) {
+        this.bets.add(bet);
     }
 
-    public void setBetQ1(double betQ1) {
-        this.betQ1 = betQ1;
-    }
-
-    public double getBetD() {
-        return betD;
-    }
-
-    public void setBetD(double betD) {
-        this.betD = betD;
-    }
-
-    public double getBetQ2() {
-        return betQ2;
-    }
-
-    public void setBetQ2(double betQ2) {
-        this.betQ2 = betQ2;
+    public List<Double> getBets() {
+        return bets;
     }
 
     public double getTotalBet() {
@@ -95,4 +62,7 @@ public class SureBet {
     public void setTotalBet(double totalBet) {
         this.totalBet = totalBet;
     }
+
+
+
 }

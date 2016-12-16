@@ -39,13 +39,13 @@ public class SureBetServiceImplUnitTest
 
         assertEquals(0.9453, sureBet.getSureBetCoefficient(), DELTA);
         assertEquals(1.0577, sureBet.getReturnPercentage(), DELTA);
-        assertEquals(58.8235, sureBet.getBetQ1(), DELTA);
-        assertEquals(0.00, sureBet.getBetD(), DELTA);
-        assertEquals(35.7142, sureBet.getBetQ2(), DELTA);
+        assertEquals(58.8235, sureBet.getBets().get(0), DELTA);
+        assertEquals(0.00, sureBet.getBets().get(1), DELTA);
+        assertEquals(35.7142, sureBet.getBets().get(2), DELTA);
         assertEquals(94.5378, sureBet.getTotalBet(), DELTA);
-        assertEquals("bm1", sureBet.getBookmakerQ1().getId());
-        assertEquals("bm1", sureBet.getBookmakerD().getId());
-        assertEquals("bm2", sureBet.getBookmakerQ2().getId());
+        assertEquals("bm1", sureBet.getBookmakers().get(0).getId());
+        assertEquals("bm1", sureBet.getBookmakers().get(1).getId());
+        assertEquals("bm2", sureBet.getBookmakers().get(2).getId());
     }
 
     private List<Quote> generateQuotesWithoutSurebet() {
@@ -66,9 +66,9 @@ public class SureBetServiceImplUnitTest
 
     private Quote createQuote(double q1, double d, double q2, Bookmaker bookmaker) {
         Quote quote = new Quote();
-        quote.setQ1(q1);
-        quote.setD(d);
-        quote.setQ2(q2);
+        quote.addValue(q1);
+        quote.addValue(d);
+        quote.addValue(q2);
         quote.setBookmaker(bookmaker);
         return quote;
     }

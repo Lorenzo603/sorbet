@@ -1,7 +1,6 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
-import org.apache.commons.collections.functors.ExceptionClosure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -10,7 +9,6 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
@@ -68,13 +66,13 @@ public class EuroBetCrawler extends AbstractCrawler {
                             try {
                                 Elements match = element.select(".box_container_scommesse_quoteType");
                                 Quote quote = new Quote();
-                                quote.setQ1(Double.valueOf(match.get(0).text()));
-                                quote.setD(Double.valueOf(match.get(1).text()));
-                                quote.setQ2(Double.valueOf(match.get(2).text()));
+                                quote.addValue(Double.valueOf(match.get(0).text())); // 1
+                                quote.addValue(Double.valueOf(match.get(1).text())); // X
+                                quote.addValue(Double.valueOf(match.get(2).text())); // 2
 
                                 String teams = element.select(".box_container_scommesse_nomeEvento").select("a").text();
-                                quote.setAliasTeam1(teams.split("-")[0].trim());
-                                quote.setAliasTeam2(teams.split("-")[1].trim());
+                                quote.setAlias1(teams.split("-")[0].trim());
+                                quote.setAlias2(teams.split("-")[1].trim());
 
                                 quotes.add(quote);
                             } catch (Exception e) {

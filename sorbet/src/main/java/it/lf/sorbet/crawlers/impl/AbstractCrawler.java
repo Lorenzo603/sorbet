@@ -36,6 +36,7 @@ public abstract class AbstractCrawler implements Crawler {
 
     protected WebDriver getWebDriver() {
         if (this.driver == null) {
+            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
             this.driver = new FirefoxDriver();
         }
         return this.driver;

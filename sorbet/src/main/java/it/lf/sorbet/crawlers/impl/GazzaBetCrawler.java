@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +49,12 @@ public class GazzaBetCrawler extends AbstractCrawler {
                     try {
                         Elements prices = element.select("td");
                         Quote quote = new Quote();
-                        quote.setQ1(Double.valueOf(prices.get(3).select(".price .dec").text()));
-                        quote.setD(Double.valueOf(prices.get(4).select(".price .dec").text()));
-                        quote.setQ2(Double.valueOf(prices.get(5).select(".price .dec").text()));
+                        quote.addValue(Double.valueOf(prices.get(3).select(".price .dec").text()));
+                        quote.addValue(Double.valueOf(prices.get(4).select(".price .dec").text()));
+                        quote.addValue(Double.valueOf(prices.get(5).select(".price .dec").text()));
 
-                        quote.setAliasTeam1(prices.get(3).select(".seln-name").text());
-                        quote.setAliasTeam2(prices.get(5).select(".seln-name").text());
+                        quote.setAlias1(prices.get(3).select(".seln-name").text());
+                        quote.setAlias2(prices.get(5).select(".seln-name").text());
 
                         quotes.add(quote);
                     } catch (Exception e) {

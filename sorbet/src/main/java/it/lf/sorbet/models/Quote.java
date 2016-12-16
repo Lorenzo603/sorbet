@@ -1,15 +1,16 @@
 package it.lf.sorbet.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quote {
 
     private Bookmaker bookmaker;
     private SportsMatch sportsMatch;
-    private String aliasTeam1;
-    private String aliasTeam2;
+    private String alias1;
+    private String alias2;
 
-    private double q1;
-    private double q2;
-    private double d;
+    private List<Double> values = new ArrayList<>();
 
     public Bookmaker getBookmaker() {
         return bookmaker;
@@ -19,31 +20,13 @@ public class Quote {
         this.bookmaker = bookmaker;
     }
 
-
-    public double getQ1() {
-        return q1;
+    public void addValue(Double value) {
+        this.values.add(value);
     }
 
-    public void setQ1(double q1) {
-        this.q1 = q1;
+    public List<Double> getValues() {
+        return this.values;
     }
-
-    public double getQ2() {
-        return q2;
-    }
-
-    public void setQ2(double q2) {
-        this.q2 = q2;
-    }
-
-    public double getD() {
-        return d;
-    }
-
-    public void setD(double d) {
-        this.d = d;
-    }
-
 
     public SportsMatch getSportsMatch() {
         return sportsMatch;
@@ -53,19 +36,19 @@ public class Quote {
         this.sportsMatch = sportsMatch;
     }
 
-    public String getAliasTeam1() {
-        return aliasTeam1;
+    public String getAlias1() {
+        return alias1;
     }
 
-    public void setAliasTeam1(String aliasTeam1) {
-        this.aliasTeam1 = aliasTeam1;
+    public void setAlias1(String alias1) {
+        this.alias1 = alias1;
     }
 
-    public String getAliasTeam2() {
-        return aliasTeam2;
+    public String getAlias2() {
+        return alias2;
     }
 
-    public void setAliasTeam2(String aliasTeam2) {
-        this.aliasTeam2 = aliasTeam2;
+    public void setAlias2(String alias2) {
+        this.alias2 = alias2;
     }
 }

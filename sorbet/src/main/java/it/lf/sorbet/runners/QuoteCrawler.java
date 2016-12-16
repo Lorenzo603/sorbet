@@ -53,17 +53,17 @@ public class QuoteCrawler
         FileWriter fileWriter = null;
         CSVPrinter csvPrinter = null;
         try {
-            fileWriter = new FileWriter("C:\\" + filename + ".csv");
+            fileWriter = new FileWriter("C:\\p\\" + filename + ".csv");
             csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
 
             for (Quote quote : quotes) {
                 List record = new ArrayList();
                 record.add(quote.getBookmaker().getId());
-                record.add(quote.getAliasTeam1());
-                record.add(quote.getAliasTeam2());
-                record.add(quote.getQ1());
-                record.add(quote.getD());
-                record.add(quote.getQ2());
+                record.add(quote.getAlias1());
+                record.add(quote.getAlias2());
+                for (Double value : quote.getValues()) {
+                    record.add(value);
+                }
                 csvPrinter.printRecord(record);
             }
             LOG.info("Finished writing quotes file: " + filename);

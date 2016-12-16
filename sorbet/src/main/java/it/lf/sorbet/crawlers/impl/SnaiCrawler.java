@@ -57,13 +57,13 @@ public class SnaiCrawler extends AbstractCrawler {
             matches.forEach(element -> {
                 Elements match = element.select("td");
                 Quote quote = new Quote();
-                quote.setQ1(Double.valueOf(match.get(1).text().replace(',', '.')));
-                quote.setD(Double.valueOf(match.get(2).text().replace(',', '.')));
-                quote.setQ2(Double.valueOf(match.get(3).text().replace(',', '.')));
+                quote.addValue(Double.valueOf(match.get(1).text().replace(',', '.')));
+                quote.addValue(Double.valueOf(match.get(2).text().replace(',', '.')));
+                quote.addValue(Double.valueOf(match.get(3).text().replace(',', '.')));
 
                 String[] teamsText = match.get(0).select("a").get(1).text().split("-");
-                quote.setAliasTeam1(teamsText[0].trim());
-                quote.setAliasTeam2(teamsText[1].trim());
+                quote.setAlias1(teamsText[0].trim());
+                quote.setAlias2(teamsText[1].trim());
 
                 quotes.add(quote);
             });

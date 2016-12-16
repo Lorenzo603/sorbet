@@ -54,13 +54,13 @@ public class WilliamHillCrawler extends AbstractCrawler {
                     matches.forEach(element -> {
                         Elements match = element.select("td[scope='col']");
                         Quote quote = new Quote();
-                        quote.setQ1(Double.valueOf(match.get(4).select(".eventprice").text()));
-                        quote.setD(Double.valueOf(match.get(5).select(".eventprice").text()));
-                        quote.setQ2(Double.valueOf(match.get(6).select(".eventprice").text()));
+                        quote.addValue(Double.valueOf(match.get(4).select(".eventprice").text()));
+                        quote.addValue(Double.valueOf(match.get(5).select(".eventprice").text()));
+                        quote.addValue(Double.valueOf(match.get(6).select(".eventprice").text()));
 
                         String[] teamText = StringEscapeUtils.unescapeHtml4(match.get(2).select("span").text()).split("-");
-                        quote.setAliasTeam1(teamText[0].trim());
-                        quote.setAliasTeam2(teamText[1].trim());
+                        quote.setAlias1(teamText[0].trim());
+                        quote.setAlias2(teamText[1].trim());
 
                         quotes.add(quote);
                     });

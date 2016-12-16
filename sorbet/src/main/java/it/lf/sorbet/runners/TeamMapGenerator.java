@@ -21,8 +21,8 @@ public class TeamMapGenerator
     public void run() {
         List<Quote> quotes = loadQuotes();
         for (Quote quote : quotes) {
-            System.out.println("teamMap.put(\"" + quote.getAliasTeam1() + "\", Arrays.asList(\"" + quote.getAliasTeam1() + "\"));");
-            System.out.println("teamMap.put(\"" + quote.getAliasTeam2() + "\", Arrays.asList(\"" + quote.getAliasTeam2() + "\"));");
+            System.out.println("teamMap.put(\"" + quote.getAlias1() + "\", Arrays.asList(\"" + quote.getAlias1() + "\"));");
+            System.out.println("teamMap.put(\"" + quote.getAlias2() + "\", Arrays.asList(\"" + quote.getAlias2() + "\"));");
         }
 
     }
@@ -36,8 +36,8 @@ public class TeamMapGenerator
             records = CSVFormat.EXCEL.parse(in);
             for (CSVRecord record : records) {
                 Quote quote = new Quote();
-                quote.setAliasTeam1(record.get(1));
-                quote.setAliasTeam2(record.get(2));
+                quote.setAlias1(record.get(1));
+                quote.setAlias2(record.get(2));
                 quotes.add(quote);
             }
             return quotes;

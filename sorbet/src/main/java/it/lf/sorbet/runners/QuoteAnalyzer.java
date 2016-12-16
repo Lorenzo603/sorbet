@@ -36,18 +36,19 @@ public class QuoteAnalyzer
                 SureBet surebet = sureBetService.getSureBet(sportsMatch);
                 if (surebet != null && sportsMatch.getQuotes().size() <= 3) {
                     LOG.info("----------  SureBet found ----------");
-                    LOG.info("sports Match: " + surebet.getSportsMatch().getAliasTeam1() + " - " + surebet.getSportsMatch().getAliasTeam2());
+                    LOG.info("sports Match: " + surebet.getSportsMatch().getAlias1() + " - " + surebet.getSportsMatch().getAlias2());
                     LOG.info("Coefficient: " + surebet.getSureBetCoefficient());
                     LOG.info("Return percentage: " + surebet.getReturnPercentage());
-                    LOG.info("Bet Q1: " + surebet.getBetQ1());
-                    LOG.info("Bet D: " + surebet.getBetD());
-                    LOG.info("Bet Q2: " + surebet.getBetQ2());
-                    LOG.info("Bookmaker Q1: " + surebet.getBookmakerQ1().getId());
-                    LOG.info("Bookmaker D: " + surebet.getBookmakerD().getId());
-                    LOG.info("Bookmaker Q2: " + surebet.getBookmakerQ2().getId());
+                    for (Double bet : surebet.getBets()) {
+                        LOG.info("Bets: " + bet);
+                    }
+                    for (Bookmaker bookmaker : surebet.getBookmakers()) {
+                        LOG.info("Bookmakers: " + bookmaker);
+                    }
+
                     LOG.info("SureBet Quotes ---");
                     for (Quote quote : surebet.getSportsMatch().getQuotes()) {
-                        LOG.info(quote.getAliasTeam1() + "$$$" + quote.getAliasTeam2());
+                        LOG.info(quote.getAlias1() + "$$$" + quote.getAlias2());
                     }
 
                 }
@@ -67,11 +68,11 @@ public class QuoteAnalyzer
                 Bookmaker bookmaker = new Bookmaker();
                 bookmaker.setId(record.get(0));
                 quote.setBookmaker(bookmaker);
-                quote.setAliasTeam1(record.get(1));
-                quote.setAliasTeam2(record.get(2));
-                quote.setQ1(Double.valueOf(record.get(3)));
-                quote.setD(Double.valueOf(record.get(4)));
-                quote.setQ2(Double.valueOf(record.get(5)));
+                quote.setAlias1(record.get(1));
+                quote.setAlias2(record.get(2));
+                for (int i = record.size() - 3; i <  record.size() ;i++) {
+                    quote.addValue(Double.valueOf(record.get(i)));
+                }
                 quotes.add(quote);
             }
             return quotes;

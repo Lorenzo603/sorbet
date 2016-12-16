@@ -1,6 +1,5 @@
 package it.lf.sorbet.services.impl;
 
-import info.debatty.java.stringsimilarity.Levenshtein;
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.services.SportsMatchService;
@@ -48,8 +47,8 @@ public class SportsMatchServiceImpl implements SportsMatchService {
                 similarSportsMatch.getQuotes().add(quote);
             } else {
                 SportsMatch sportsMatch = new SportsMatch();
-                sportsMatch.setAliasTeam1(quote.getAliasTeam1());
-                sportsMatch.setAliasTeam2(quote.getAliasTeam2());
+                sportsMatch.setAlias1(quote.getAlias1());
+                sportsMatch.setAlias2(quote.getAlias2());
                 quote.setSportsMatch(sportsMatch);
                 sportsMatch.setQuotes(new ArrayList<Quote>(Arrays.asList(quote)));
                 sportsMatchHashMap.put(key, sportsMatch);
@@ -58,8 +57,8 @@ public class SportsMatchServiceImpl implements SportsMatchService {
     }
 
     private SportsMatch findSimilarSportsMatch(Quote quote, String key) {
-        if (stringSimilarityService.areSimilar(quote.getAliasTeam1(), key.split("\\|\\|\\|")[0])
-            && stringSimilarityService.areSimilar(quote.getAliasTeam2(), key.split("\\|\\|\\|")[1])) {
+        if (stringSimilarityService.areSimilar(quote.getAlias1(), key.split("\\|\\|\\|")[0])
+            && stringSimilarityService.areSimilar(quote.getAlias2(), key.split("\\|\\|\\|")[1])) {
             for (String existingKey : sportsMatchHashMap.keySet()) {
                 if (stringSimilarityService.areSimilar(existingKey, key)) {
                     return sportsMatchHashMap.get(existingKey);
@@ -71,7 +70,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
     }
 
     private String generateSportsMatchMapKeyFromQuote(Quote quote) {
-        return generateSportsMatchMapKey(quote.getAliasTeam1(), quote.getAliasTeam2());
+        return generateSportsMatchMapKey(quote.getAlias1(), quote.getAlias2());
     }
 
     private String generateSportsMatchMapKey(String aliasTeam1, String aliasTeam2) {
