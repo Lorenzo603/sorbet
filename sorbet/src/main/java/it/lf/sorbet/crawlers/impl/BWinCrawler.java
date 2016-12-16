@@ -31,8 +31,7 @@ public class BWinCrawler extends AbstractCrawler {
         WebDriver driver = null;
         try {
             String url = getCrawlerConfig().getString("url");
-            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-            driver = new FirefoxDriver();
+            driver = getWebDriver();
 
             driver.get(url);
             sleep(400);
@@ -42,13 +41,13 @@ public class BWinCrawler extends AbstractCrawler {
             matches.forEach(element -> {
                 Elements match = element.select(".mb-option-button__option-odds");
                 Quote quote = new Quote();
-                quote.setQ1(Double.valueOf(match.get(0).text()));
-                quote.setD(Double.valueOf(match.get(1).text()));
-                quote.setQ2(Double.valueOf(match.get(2).text()));
+                quote.addValue(Double.valueOf(match.get(0).text())); // 1
+                quote.addValue(Double.valueOf(match.get(1).text())); // X
+                quote.addValue(Double.valueOf(match.get(2).text())); // 2
 
                 Elements teams = element.select(".mb-option-button__option-name");
-                quote.setAliasTeam1(teams.get(0).text());
-                quote.setAliasTeam2(teams.get(2).text());
+                quote.setAlias1(teams.get(0).text());
+                quote.setAlias2(teams.get(2).text());
 
                 quotes.add(quote);
             });
@@ -57,9 +56,7 @@ public class BWinCrawler extends AbstractCrawler {
             LOG.error(e.getMessage(), e);
             return Collections.EMPTY_LIST;
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            getWebDriver().quit();
         }
 
         return quotes;
