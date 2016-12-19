@@ -30,11 +30,13 @@ public class BWinCrawler extends AbstractCrawler {
 
         WebDriver driver = null;
         try {
-            String url = "";
+            String url;
             if ("soccer".equals(sport)) {
                 url = "https://sports.bwin.com/en/sports#sportId=4";
             } else if ("tennis".equals(sport)){
-                url = "https://sports.bwin.com/en/sports#sportId=5";
+                url = "https://sports.bwin.it/it/sports#sportId=5";
+            } else {
+                throw new IllegalStateException("Target sport not set");
             }
 
             driver = getWebDriver();
@@ -49,11 +51,17 @@ public class BWinCrawler extends AbstractCrawler {
                 Quote quote = new Quote();
                 quote.addValue(Double.valueOf(match.get(0).text())); // 1
                 quote.addValue(Double.valueOf(match.get(1).text())); // X
-                quote.addValue(Double.valueOf(match.get(2).text())); // 2
+                if ("soccer".equals(sport)) {
+                    quote.addValue(Double.valueOf(match.get(2).text())); // 2
+                }
 
                 Elements teams = element.select(".mb-option-button__option-name");
                 quote.setAlias1(teams.get(0).text());
-                quote.setAlias2(teams.get(2).text());
+                if ("tennis".equals(sport)) {
+                    quote.setAlias2(teams.get(1).text());
+                } else {
+                    quote.setAlias2(teams.get(2).text());
+                }
 
                 quotes.add(quote);
             });
