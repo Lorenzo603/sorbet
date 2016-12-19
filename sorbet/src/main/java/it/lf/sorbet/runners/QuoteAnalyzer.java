@@ -5,6 +5,7 @@ import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.models.SureBet;
 import it.lf.sorbet.services.SportsMatchService;
+import it.lf.sorbet.services.ValueNormalizer;
 import it.lf.sorbet.services.SureBetService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -31,9 +32,11 @@ public class QuoteAnalyzer
     private SureBetService sureBetService;
     @Autowired
     private SportsMatchService sportsMatchService;
+    @Autowired
+    private ValueNormalizer valueNormalizer;
 
-    public void run() {
-        List<Quote> quotes = loadQuotes();
+    public void run(String sport) {
+        List<Quote> quotes = loadQuotes(sport);
         if (quotes != null) {
             for (SportsMatch sportsMatch : sportsMatchService.findAndAssignAllSportMatchesAndQuotes(quotes)) {
                 SureBet surebet = sureBetService.getSureBet(sportsMatch);
@@ -59,7 +62,7 @@ public class QuoteAnalyzer
         }
     }
 
-    private static List<Quote> loadQuotes() {
+    private List<Quote> loadQuotes(String sport) {
         List<Quote> quotes = new ArrayList<Quote>();
 
         try {
@@ -73,18 +76,25 @@ public class QuoteAnalyzer
                     Bookmaker bookmaker = new Bookmaker();
                     bookmaker.setId(record.get(0));
                     quote.setBookmaker(bookmaker);
-                    quote.setAlias1(record.get(1));
-                    quote.setAlias2(record.get(2));
+                    if ("tennis".equals(sport)) {
+                        quote.setAlias1(valueNormalizer.normalizeAlias(record.get(1)));
+                        quote.setAlias2(valueNormalizer.normalizeAlias(record.get(2)));
+                    } else {
+                        quote.setAlias1(record.get(1));
+                        quote.setAlias2(record.get(2));
+                    }
                     for (int i = 3; i <  record.size() ;i++) {
                         quote.addValue(Double.valueOf(record.get(i)));
                     }
                     quotes.add(quote);
                 }
-                return quotes;
             }
+            return quotes;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+
 }

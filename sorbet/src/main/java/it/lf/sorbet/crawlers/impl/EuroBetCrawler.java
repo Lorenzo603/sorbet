@@ -104,13 +104,17 @@ public class EuroBetCrawler extends AbstractCrawler {
                 (new WebDriverWait(driver, 10))
                         .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[title='HomePage']"))).click();
 
+                Thread.sleep(5000);
+
                 (new WebDriverWait(driver, 10))
                         .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div[title^='Tennis']"))).click();
+
+                Thread.sleep(5000);
 
                 (new WebDriverWait(driver, 10))
                         .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#buttonToday"))).click();
 
-                Thread.sleep(200);
+                Thread.sleep(5000);
 
                 Document subcategoryDoc = Jsoup.parse(driver.getPageSource());
 
@@ -128,7 +132,7 @@ public class EuroBetCrawler extends AbstractCrawler {
 
                         quotes.add(quote);
                     } catch (Exception e) {
-                        LOG.error(e);
+                        LOG.error(e.getMessage(), e);
                     }
 
                 });

@@ -31,8 +31,6 @@ public class SnaiCrawler extends AbstractCrawler {
     public List<Quote> crawl(String sport) {
         final List<Quote> quotes = new ArrayList<>();
 
-        WebDriver driver = null;
-
         try {
             String url;
             if ("soccer".equals(sport)) {
@@ -43,7 +41,7 @@ public class SnaiCrawler extends AbstractCrawler {
                 throw new IllegalStateException("Target sport not set");
             }
 
-            driver = getWebDriver();
+            WebDriver driver = getWebDriver();
 
             driver.get(url);
             Thread.sleep(2000);
@@ -53,19 +51,22 @@ public class SnaiCrawler extends AbstractCrawler {
             if ("soccer".equals(sport)) {
                 (new WebDriverWait(driver, 10))
                         .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='CALCIO_0']"))).click();
-            } else if ("tennis".equals(sport)){
+
+                Thread.sleep(1000);
                 (new WebDriverWait(driver, 10))
-                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='TENNIS_2']"))).click();
+                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".btn-group-justified")));
+                driver.findElement(By.cssSelector(".btn-group-justified")).findElements(By.tagName("a")).get(2).click();
+                Thread.sleep(5000);
+
             }
 
-            Thread.sleep(1000);
-            (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".btn-group-justified")));
-            driver.findElement(By.cssSelector(".btn-group-justified")).findElements(By.tagName("a")).get(2).click();
-            Thread.sleep(5000);
-
+            Elements matches = null;
             Document doc = Jsoup.parse(driver.getPageSource());
-            Elements matches = doc.select("tr.ng-scope");
+            if ("soccer".equals(sport)) {
+                matches = doc.select("#piuGiocate_CALCIO tr.ng-scope");
+            } else if ("tennis".equals(sport)) {
+                matches = doc.select("#piuGiocate_TENNIS tr.ng-scope");
+            }
 
             matches.forEach(element -> {
                 Elements match = element.select("td");
@@ -76,9 +77,9 @@ public class SnaiCrawler extends AbstractCrawler {
                     quote.addValue(Double.valueOf(match.get(3).text().replace(',', '.')));
                 }
 
-                String[] teamsText = match.get(0).select("a").get(1).text().split("-");
-                quote.setAlias1(teamsText[0].trim());
-                quote.setAlias2(teamsText[1].trim());
+                String[] teamsText = match.get(0).select("a").get(0).text().split("-");
+                quote.setAlias1(teamsText[0].trim().replace(",", " "));
+                quote.setAlias2(teamsText[1].trim().replace(",", " "));
 
                 quotes.add(quote);
             });
@@ -87,7 +88,7 @@ public class SnaiCrawler extends AbstractCrawler {
             LOG.error("Connection exception", e);
             return Collections.EMPTY_LIST;
         } finally {
-            driver.quit();
+            getWebDriver().quit();
         }
         return quotes;
     }

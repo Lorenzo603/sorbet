@@ -28,7 +28,6 @@ public class BWinCrawler extends AbstractCrawler {
 
         final List<Quote> quotes = new ArrayList<>();
 
-        WebDriver driver = null;
         try {
             String url;
             if ("soccer".equals(sport)) {
@@ -39,7 +38,7 @@ public class BWinCrawler extends AbstractCrawler {
                 throw new IllegalStateException("Target sport not set");
             }
 
-            driver = getWebDriver();
+            WebDriver driver = getWebDriver();
 
             driver.get(url);
             sleep(400);

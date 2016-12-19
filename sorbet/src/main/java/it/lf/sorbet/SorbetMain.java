@@ -23,7 +23,7 @@ public class SorbetMain {
         if (ArrayUtils.contains(args, "crawl")) {
             ((QuoteCrawler) ctx.getBean("quoteCrawler")).run(args[1]);
         } else if (ArrayUtils.contains(args, "analyze")) {
-            ((QuoteAnalyzer) ctx.getBean("quoteAnalyzer")).run();
+            ((QuoteAnalyzer) ctx.getBean("quoteAnalyzer")).run(args[1]);
         } else if (ArrayUtils.contains(args, "generateTeamMap")) {
             ((TeamMapGenerator) ctx.getBean("teamMapGenerator")).run();
         } else {
