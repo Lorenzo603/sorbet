@@ -34,9 +34,16 @@ public class WilliamHillCrawler extends AbstractCrawler {
 
 
         try {
-            String url = getCrawlerConfig().getString("url");
-            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-            driver = new FirefoxDriver();
+            String url;
+            if ("soccer".equals(sport)) {
+                url = "http://sports.williamhill.it/bet_ita/it/betting/y/5/Calcio.html";
+            } else if ("tennis".equals(sport)){
+                url = "http://sports.williamhill.it/bet_ita/it/betting/y/5/Calcio.html";
+            } else {
+                throw new IllegalStateException("Target sport not set");
+            }
+
+            driver = getWebDriver();
 
             driver.get(url);
             List<String> subcategoriesLinks = new ArrayList<>();
@@ -75,7 +82,7 @@ public class WilliamHillCrawler extends AbstractCrawler {
             LOG.error("Connection exception", e);
             return Collections.EMPTY_LIST;
         } finally {
-            driver.quit();
+            getWebDriver().quit();
         }
 
         return quotes;

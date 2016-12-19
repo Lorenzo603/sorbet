@@ -27,14 +27,27 @@ public class GazzaBetCrawler extends AbstractCrawler {
         final List<Quote> quotes = new ArrayList<>();
 
         try {
-            String url = getCrawlerConfig().getString("url");
-            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
+            String url;
+            if ("soccer".equals(sport)) {
+                url = "http://sports.gazzabet.it/it/s/FOOT/Calcio";
+            } else if ("tennis".equals(sport)){
+                url = "http://sports.gazzabet.it/it/s/TENN/Tennis";
+            } else {
+                throw new IllegalStateException("Target sport not set");
+            }
+
             WebDriver driver = getWebDriver();
 
             driver.get(url);
 
             List<String> links = new ArrayList<>();
-            List<WebElement> subcategories = driver.findElements(By.cssSelector("#nav-area .sport-FOOT .expander-content > .expander a"));
+            List<WebElement> subcategories = new ArrayList<>();
+            if ("soccer".equals(sport)) {
+                subcategories = driver.findElements(By.cssSelector("#nav-area .sport-FOOT .expander-content > .expander a"));
+            } else if ("tennis".equals(sport)) {
+                subcategories = driver.findElements(By.cssSelector("#nav-area .sport-TENN .expander-content > .expander a"));
+            }
+
             for (WebElement subcategory : subcategories) {
                 links.add(subcategory.getAttribute("href"));
             }
@@ -51,10 +64,16 @@ public class GazzaBetCrawler extends AbstractCrawler {
                         Quote quote = new Quote();
                         quote.addValue(Double.valueOf(prices.get(3).select(".price .dec").text()));
                         quote.addValue(Double.valueOf(prices.get(4).select(".price .dec").text()));
-                        quote.addValue(Double.valueOf(prices.get(5).select(".price .dec").text()));
+                        if ("soccer".equals(sport)) {
+                            quote.addValue(Double.valueOf(prices.get(5).select(".price .dec").text()));
+                        }
 
                         quote.setAlias1(prices.get(3).select(".seln-name").text());
-                        quote.setAlias2(prices.get(5).select(".seln-name").text());
+                        if ("soccer".equals(sport)) {
+                            quote.setAlias2(prices.get(5).select(".seln-name").text());
+                        } else if ("tennis".equals(sport)) {
+                            quote.setAlias2(prices.get(4).select(".seln-name").text());
+                        }
 
                         quotes.add(quote);
                     } catch (Exception e) {

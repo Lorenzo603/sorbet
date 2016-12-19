@@ -31,9 +31,9 @@ public class SpringConfiguration {
                 //betFairCrawler,
                 //bwinCrawler,
                 //euroBetCrawler,
-                snaiCrawler
-//                gazzaBetCrawler,
-                //williamHillCrawler
+                //snaiCrawler,
+                //gazzaBetCrawler,
+                williamHillCrawler
         );
     }
 

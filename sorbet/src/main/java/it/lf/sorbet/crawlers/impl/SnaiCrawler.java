@@ -34,9 +34,16 @@ public class SnaiCrawler extends AbstractCrawler {
         WebDriver driver = null;
 
         try {
-            String url = getCrawlerConfig().getString("url");
-            System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-            driver = new FirefoxDriver();
+            String url;
+            if ("soccer".equals(sport)) {
+                url = "https://www.snai.it/sport";
+            } else if ("tennis".equals(sport)){
+                url = "https://www.snai.it/sport";
+            } else {
+                throw new IllegalStateException("Target sport not set");
+            }
+
+            driver = getWebDriver();
 
             driver.get(url);
             Thread.sleep(2000);
