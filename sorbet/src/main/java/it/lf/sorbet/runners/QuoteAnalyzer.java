@@ -75,7 +75,7 @@ public class QuoteAnalyzer
                     quote.setBookmaker(bookmaker);
                     quote.setAlias1(record.get(1));
                     quote.setAlias2(record.get(2));
-                    for (int i = record.size() - 3; i <  record.size() ;i++) {
+                    for (int i = 3; i <  record.size() ;i++) {
                         quote.addValue(Double.valueOf(record.get(i)));
                     }
                     quotes.add(quote);

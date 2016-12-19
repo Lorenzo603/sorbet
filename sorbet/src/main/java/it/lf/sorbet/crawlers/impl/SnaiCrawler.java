@@ -50,8 +50,14 @@ public class SnaiCrawler extends AbstractCrawler {
             (new WebDriverWait(driver, 20))
                     .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ccc-close"))).click();
             Thread.sleep(2000);
-            (new WebDriverWait(driver, 10))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='CALCIO_0']"))).click();
+            if ("soccer".equals(sport)) {
+                (new WebDriverWait(driver, 10))
+                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='CALCIO_0']"))).click();
+            } else if ("tennis".equals(sport)){
+                (new WebDriverWait(driver, 10))
+                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[aria-controls='TENNIS_2']"))).click();
+            }
+
             Thread.sleep(1000);
             (new WebDriverWait(driver, 10))
                     .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".btn-group-justified")));
@@ -66,7 +72,9 @@ public class SnaiCrawler extends AbstractCrawler {
                 Quote quote = new Quote();
                 quote.addValue(Double.valueOf(match.get(1).text().replace(',', '.')));
                 quote.addValue(Double.valueOf(match.get(2).text().replace(',', '.')));
-                quote.addValue(Double.valueOf(match.get(3).text().replace(',', '.')));
+                if ("soccer".equals(sport)) {
+                    quote.addValue(Double.valueOf(match.get(3).text().replace(',', '.')));
+                }
 
                 String[] teamsText = match.get(0).select("a").get(1).text().split("-");
                 quote.setAlias1(teamsText[0].trim());

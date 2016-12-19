@@ -38,7 +38,7 @@ public class WilliamHillCrawler extends AbstractCrawler {
             if ("soccer".equals(sport)) {
                 url = "http://sports.williamhill.it/bet_ita/it/betting/y/5/Calcio.html";
             } else if ("tennis".equals(sport)){
-                url = "http://sports.williamhill.it/bet_ita/it/betting/y/5/Calcio.html";
+                url = "http://sports.williamhill.it/bet_ita/it/betting/y/17/Tennis.html";
             } else {
                 throw new IllegalStateException("Target sport not set");
             }
