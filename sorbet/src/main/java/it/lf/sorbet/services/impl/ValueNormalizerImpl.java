@@ -22,8 +22,10 @@ public class ValueNormalizerImpl implements ValueNormalizer {
         // take only first letter of first name
         if (!trimmed.contains("/")) {
             String[] separateNames = trimmed.split(" ");
-            String normFirstName = separateNames[0].charAt(0) + " " + separateNames[1];
-            return normFirstName;
+            if (separateNames.length > 1) {
+                String normFirstName = separateNames[0].charAt(0) + " " + separateNames[1];
+                return normFirstName;
+            }
         }
 
         return trimmed;
