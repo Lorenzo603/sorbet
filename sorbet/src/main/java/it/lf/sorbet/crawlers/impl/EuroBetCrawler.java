@@ -2,6 +2,7 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.services.ValueNormalizer;
+import it.lf.sorbet.services.impl.EurobetValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -12,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,8 +25,8 @@ public class EuroBetCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(EuroBetCrawler.class);
 
-    @Resource(name = "eurobetValueNormalizer")
-    private ValueNormalizer eurobetValueNormalizer;
+    @Autowired
+    private EurobetValueNormalizer eurobetValueNormalizer;
 
     @Override
     public String getBookmakerId() {

@@ -2,6 +2,7 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.services.ValueNormalizer;
+import it.lf.sorbet.services.impl.GazzabetValueNormalizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,8 +23,8 @@ import java.util.List;
 public class GazzaBetCrawler extends AbstractCrawler {
     private static Logger LOG = LogManager.getLogger(GazzaBetCrawler.class);
 
-    @Resource(name = "gazzabetValueNormalizer")
-    private ValueNormalizer gazzabetValueNormalizer;
+    @Autowired
+    private GazzabetValueNormalizer gazzabetValueNormalizer;
 
     @Override
     public String getBookmakerId() {

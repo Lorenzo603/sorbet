@@ -13,6 +13,8 @@ import java.util.List;
 public class SpringConfiguration {
 
     @Autowired
+    private Bet365Crawler bet365Crawler;
+    @Autowired
     private BetFairCrawler betFairCrawler;
     @Autowired
     private BWinCrawler bwinCrawler;
@@ -28,12 +30,13 @@ public class SpringConfiguration {
     @Bean
     public List<Crawler> crawlers(){
         return Arrays.asList(
+                bet365Crawler,
                 betFairCrawler,
                 bwinCrawler,
                 euroBetCrawler,
                 snaiCrawler,
-                gazzaBetCrawler
-                //williamHillCrawler
+                gazzaBetCrawler,
+                williamHillCrawler
         );
     }
 

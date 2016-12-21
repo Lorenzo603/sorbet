@@ -3,6 +3,7 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.services.ValueNormalizer;
+import it.lf.sorbet.services.impl.SnaiValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -13,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,8 +27,8 @@ public class SnaiCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(SnaiCrawler.class);
 
-    @Resource(name = "snaiValueNormalizer")
-    private ValueNormalizer snaiValueNormalizer;
+    @Autowired
+    private SnaiValueNormalizer snaiValueNormalizer;
 
     @Override
     public String getBookmakerId() {

@@ -22,17 +22,21 @@ public class SnaiValueNormalizer extends AbstractValueNormalizer {
     @Autowired
     private RemoveNationality removeNationality;
     @Autowired
+    private InvertNameSurname invertNameSurname;
+    @Autowired
     private FilterFirstName filterFirstName;
 
     @Bean
-    protected List<NormalizationAction> normalizationActions() {
+    @Override
+    protected List<NormalizationAction> getNormalizedActions() {
         List<NormalizationAction> aList = new ArrayList<>();
         aList.add(trimming);
         aList.add(removeExtraneousCharacters);
         aList.add(removeNationality);
+        aList.add(invertNameSurname);
         aList.add(filterFirstName);
-        this.normalizationActions = aList;
         return aList;
     }
+
 
 }

@@ -9,6 +9,6 @@ public class Trimming implements NormalizationAction {
 
     @Override
     public String execute(String input) {
-        return input.trim();
+        return input.replaceAll("\\u00A0", "").trim();
     }
 }

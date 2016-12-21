@@ -2,6 +2,7 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.services.ValueNormalizer;
+import it.lf.sorbet.services.impl.BwinValueNormalizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +25,8 @@ public class BWinCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BWinCrawler.class);
 
-    @Resource(name = "bwinValueNormalizer")
-    private ValueNormalizer bwinValueNormalizer;
+    @Autowired
+    private BwinValueNormalizer bwinValueNormalizer;
 
     @Override
     public String getBookmakerId() {

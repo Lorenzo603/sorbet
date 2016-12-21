@@ -2,6 +2,7 @@ package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.services.ValueNormalizer;
+import it.lf.sorbet.services.impl.BetFairValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -23,8 +24,8 @@ public class BetFairCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BetFairCrawler.class);
 
-    @Resource(name = "betFairValueNormalizer")
-    private ValueNormalizer betfairValueNormalizer;
+    @Autowired
+    private BetFairValueNormalizer betFairValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -126,8 +127,8 @@ public class BetFairCrawler extends AbstractCrawler {
                     String alias2 = element.select(".away-team-name").text();
                     quote.setAlias1(alias1);
                     quote.setAlias2(alias2);
-                    quote.setNormalizedAlias1(betfairValueNormalizer.normalizeAlias(alias1));
-                    quote.setNormalizedAlias2(betfairValueNormalizer.normalizeAlias(alias2));
+                    quote.setNormalizedAlias1(betFairValueNormalizer.normalizeAlias(alias1));
+                    quote.setNormalizedAlias2(betFairValueNormalizer.normalizeAlias(alias2));
 
                     quotes.add(quote);
                 });

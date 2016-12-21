@@ -26,15 +26,14 @@ public class BetFairValueNormalizer extends AbstractValueNormalizer {
     private FilterFirstName filterFirstName;
 
     @Bean
-    protected List<NormalizationAction> normalizationActions() {
+    @Override
+    protected List<NormalizationAction> getNormalizedActions() {
         List<NormalizationAction> aList = new ArrayList<>();
         aList.add(trimming);
         aList.add(removeExtraneousCharacters);
         aList.add(removeNationality);
         aList.add(filterFirstName);
-        this.normalizationActions = aList;
         return aList;
     }
-
 
 }

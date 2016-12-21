@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EurobetValueNormalizer extends AbstractValueNormalizer {
+public class WilliamHillValueNormalizer extends AbstractValueNormalizer {
 
     @Autowired
     private Trimming trimming;
@@ -21,8 +21,6 @@ public class EurobetValueNormalizer extends AbstractValueNormalizer {
     private RemoveExtraneousCharacters removeExtraneousCharacters;
     @Autowired
     private RemoveNationality removeNationality;
-    @Autowired
-    private InvertNameSurname invertNameSurname;
     @Autowired
     private FilterFirstName filterFirstName;
 
@@ -33,10 +31,8 @@ public class EurobetValueNormalizer extends AbstractValueNormalizer {
         aList.add(trimming);
         aList.add(removeExtraneousCharacters);
         aList.add(removeNationality);
-        aList.add(invertNameSurname);
         aList.add(filterFirstName);
         return aList;
     }
-
 
 }
