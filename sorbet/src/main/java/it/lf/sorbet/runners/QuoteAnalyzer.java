@@ -5,7 +5,6 @@ import it.lf.sorbet.models.Quote;
 import it.lf.sorbet.models.SportsMatch;
 import it.lf.sorbet.models.SureBet;
 import it.lf.sorbet.services.SportsMatchService;
-import it.lf.sorbet.services.ValueNormalizer;
 import it.lf.sorbet.services.SureBetService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -32,8 +31,6 @@ public class QuoteAnalyzer
     private SureBetService sureBetService;
     @Autowired
     private SportsMatchService sportsMatchService;
-    @Autowired
-    private ValueNormalizer valueNormalizer;
 
     public void run(String sport) {
         List<Quote> quotes = loadQuotes(sport);
@@ -69,21 +66,18 @@ public class QuoteAnalyzer
             File quoteDir = new File("C:\\p");
             for (File file : Arrays.stream(quoteDir.listFiles()).filter(f -> f.getName().endsWith(".csv")).collect(Collectors.toList())) {
                 Reader in = new FileReader(file);
-                Iterable<CSVRecord> records = null;
+                Iterable<CSVRecord> records;
                 records = CSVFormat.EXCEL.parse(in);
                 for (CSVRecord record : records) {
                     Quote quote = new Quote();
                     Bookmaker bookmaker = new Bookmaker();
                     bookmaker.setId(record.get(0));
                     quote.setBookmaker(bookmaker);
-                    if ("tennis".equals(sport)) {
-                        quote.setAlias1(valueNormalizer.normalizeAlias(record.get(1)));
-                        quote.setAlias2(valueNormalizer.normalizeAlias(record.get(2)));
-                    } else {
-                        quote.setAlias1(record.get(1));
-                        quote.setAlias2(record.get(2));
-                    }
-                    for (int i = 3; i <  record.size() ;i++) {
+                    quote.setAlias1(record.get(1));
+                    quote.setAlias2(record.get(2));
+                    quote.setNormalizedAlias1(record.get(3));
+                    quote.setNormalizedAlias2(record.get(4));
+                    for (int i = 5; i < record.size(); i++) {
                         quote.addValue(Double.valueOf(record.get(i)));
                     }
                     quotes.add(quote);

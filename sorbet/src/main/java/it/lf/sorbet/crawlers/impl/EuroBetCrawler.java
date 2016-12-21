@@ -1,6 +1,7 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import it.lf.sorbet.services.ValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -13,6 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,9 @@ import java.util.List;
 public class EuroBetCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(EuroBetCrawler.class);
+
+    @Resource(name = "eurobetValueNormalizer")
+    private ValueNormalizer eurobetValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -79,8 +84,12 @@ public class EuroBetCrawler extends AbstractCrawler {
                                     quote.addValue(Double.valueOf(match.get(2).text())); // 2
 
                                     String teams = element.select(".box_container_scommesse_nomeEvento").select("a").text();
-                                    quote.setAlias1(teams.split("-")[0].trim());
-                                    quote.setAlias2(teams.split("-")[1].trim());
+                                    String alias1 = teams.split("-")[0];
+                                    String alias2 = teams.split("-")[1];
+                                    quote.setAlias1(alias1);
+                                    quote.setAlias2(alias2);
+                                    quote.setNormalizedAlias1(eurobetValueNormalizer.normalizeAlias(alias1));
+                                    quote.setNormalizedAlias2(eurobetValueNormalizer.normalizeAlias(alias2));
 
                                     quotes.add(quote);
                                 } catch (Exception e) {
@@ -127,8 +136,12 @@ public class EuroBetCrawler extends AbstractCrawler {
                         quote.addValue(Double.valueOf(match.get(1).text())); // 2
 
                         String teams = element.select(".box_container_scommesse_nomeEvento").select("a").text();
-                        quote.setAlias1(teams.split("-")[0].trim());
-                        quote.setAlias2(teams.split("-")[1].trim());
+                        String alias1 = teams.split("-")[0];
+                        String alias2 = teams.split("-")[1];
+                        quote.setAlias1(alias1);
+                        quote.setAlias2(alias2);
+                        quote.setNormalizedAlias1(eurobetValueNormalizer.normalizeAlias(alias1));
+                        quote.setNormalizedAlias2(eurobetValueNormalizer.normalizeAlias(alias2));
 
                         quotes.add(quote);
                     } catch (Exception e) {

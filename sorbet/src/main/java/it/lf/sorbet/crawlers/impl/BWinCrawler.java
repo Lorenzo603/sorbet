@@ -1,6 +1,8 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import it.lf.sorbet.services.ValueNormalizer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -8,8 +10,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +23,9 @@ import java.util.List;
 public class BWinCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BWinCrawler.class);
+
+    @Resource(name = "bwinValueNormalizer")
+    private ValueNormalizer bwinValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -55,12 +63,17 @@ public class BWinCrawler extends AbstractCrawler {
                 }
 
                 Elements teams = element.select(".mb-option-button__option-name");
-                quote.setAlias1(teams.get(0).text());
+                String alias1 = teams.get(0).text();
+                quote.setAlias1(alias1);
+                quote.setNormalizedAlias1(bwinValueNormalizer.normalizeAlias(alias1));
+                String alias2 = StringUtils.EMPTY;
                 if ("tennis".equals(sport)) {
-                    quote.setAlias2(teams.get(1).text());
-                } else {
-                    quote.setAlias2(teams.get(2).text());
+                    alias2 = teams.get(1).text();
+                } else if ("soccer".equals(sport)) {
+                    alias2 = teams.get(2).text();
                 }
+                quote.setAlias2(alias2);
+                quote.setNormalizedAlias2(bwinValueNormalizer.normalizeAlias(alias2));
 
                 quotes.add(quote);
             });

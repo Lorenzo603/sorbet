@@ -1,6 +1,7 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import it.lf.sorbet.services.ValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -11,14 +12,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service
 public class BetFairCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(BetFairCrawler.class);
+
+    @Resource(name = "betFairValueNormalizer")
+    private ValueNormalizer betfairValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -87,6 +93,7 @@ public class BetFairCrawler extends AbstractCrawler {
                             return;
                         }
 
+
                         quote.setAlias1(element.select(".home-team-name").text());
                         quote.setAlias2(element.select(".away-team-name").text());
 
@@ -115,8 +122,12 @@ public class BetFairCrawler extends AbstractCrawler {
                         return;
                     }
 
-                    quote.setAlias1(element.select(".home-team-name").text());
-                    quote.setAlias2(element.select(".away-team-name").text());
+                    String alias1 = element.select(".home-team-name").text();
+                    String alias2 = element.select(".away-team-name").text();
+                    quote.setAlias1(alias1);
+                    quote.setAlias2(alias2);
+                    quote.setNormalizedAlias1(betfairValueNormalizer.normalizeAlias(alias1));
+                    quote.setNormalizedAlias2(betfairValueNormalizer.normalizeAlias(alias2));
 
                     quotes.add(quote);
                 });

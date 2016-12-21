@@ -2,6 +2,7 @@ package it.lf.sorbet.crawlers.impl;
 
 
 import it.lf.sorbet.models.Quote;
+import it.lf.sorbet.services.ValueNormalizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -14,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,9 @@ import java.util.List;
 public class SnaiCrawler extends AbstractCrawler {
 
     private static Logger LOG = LogManager.getLogger(SnaiCrawler.class);
+
+    @Resource(name = "snaiValueNormalizer")
+    private ValueNormalizer snaiValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -78,8 +83,12 @@ public class SnaiCrawler extends AbstractCrawler {
                 }
 
                 String[] teamsText = match.get(0).select("a").get(0).text().split("-");
-                quote.setAlias1(teamsText[0].trim().replace(",", " "));
-                quote.setAlias2(teamsText[1].trim().replace(",", " "));
+                String alias1 = teamsText[0].trim().replace(",", " ");
+                String alias2 = teamsText[1].trim().replace(",", " ");
+                quote.setAlias1(alias1);
+                quote.setAlias2(alias2);
+                quote.setNormalizedAlias1(snaiValueNormalizer.normalizeAlias(alias1));
+                quote.setNormalizedAlias2(snaiValueNormalizer.normalizeAlias(alias2));
 
                 quotes.add(quote);
             });

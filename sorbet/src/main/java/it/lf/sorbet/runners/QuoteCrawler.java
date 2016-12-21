@@ -61,6 +61,8 @@ public class QuoteCrawler
                 record.add(quote.getBookmaker().getId());
                 record.add(quote.getAlias1());
                 record.add(quote.getAlias2());
+                record.add(quote.getNormalizedAlias1());
+                record.add(quote.getNormalizedAlias2());
                 for (Double value : quote.getValues()) {
                     record.add(value);
                 }

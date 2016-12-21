@@ -9,6 +9,8 @@ public class Quote {
     private SportsMatch sportsMatch;
     private String alias1;
     private String alias2;
+    private String normalizedAlias1;
+    private String normalizedAlias2;
 
     private List<Double> values = new ArrayList<>();
 
@@ -50,5 +52,21 @@ public class Quote {
 
     public void setAlias2(String alias2) {
         this.alias2 = alias2;
+    }
+
+    public String getNormalizedAlias1() {
+        return normalizedAlias1;
+    }
+
+    public void setNormalizedAlias1(String normalizedAlias1) {
+        this.normalizedAlias1 = normalizedAlias1;
+    }
+
+    public String getNormalizedAlias2() {
+        return normalizedAlias2;
+    }
+
+    public void setNormalizedAlias2(String normalizedAlias2) {
+        this.normalizedAlias2 = normalizedAlias2;
     }
 }

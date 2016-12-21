@@ -1,6 +1,8 @@
 package it.lf.sorbet.crawlers.impl;
 
 import it.lf.sorbet.models.Quote;
+import it.lf.sorbet.services.ValueNormalizer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -11,12 +13,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class GazzaBetCrawler extends AbstractCrawler {
     private static Logger LOG = LogManager.getLogger(GazzaBetCrawler.class);
+
+    @Resource(name = "gazzabetValueNormalizer")
+    private ValueNormalizer gazzabetValueNormalizer;
 
     @Override
     public String getBookmakerId() {
@@ -68,12 +74,17 @@ public class GazzaBetCrawler extends AbstractCrawler {
                             quote.addValue(Double.valueOf(prices.get(5).select(".price .dec").text()));
                         }
 
-                        quote.setAlias1(prices.get(3).select(".seln-name").text());
+                        String alias1 = prices.get(3).select(".seln-name").text();
+                        quote.setAlias1(alias1);
+                        quote.setNormalizedAlias1(gazzabetValueNormalizer.normalizeAlias(alias1));
+                        String alias2 = StringUtils.EMPTY;
                         if ("soccer".equals(sport)) {
-                            quote.setAlias2(prices.get(5).select(".seln-name").text());
+                            alias2 = prices.get(5).select(".seln-name").text();
                         } else if ("tennis".equals(sport)) {
-                            quote.setAlias2(prices.get(4).select(".seln-name").text());
+                            alias2 = prices.get(4).select(".seln-name").text();
                         }
+                        quote.setAlias2(alias2);
+                        quote.setNormalizedAlias2(gazzabetValueNormalizer.normalizeAlias(alias2));
 
                         quotes.add(quote);
                     } catch (Exception e) {
