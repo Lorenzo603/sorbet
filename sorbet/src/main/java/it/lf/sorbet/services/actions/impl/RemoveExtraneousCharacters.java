@@ -9,6 +9,6 @@ public class RemoveExtraneousCharacters implements NormalizationAction {
 
     @Override
     public String execute(String input) {
-        return input.replace(".", " ");
+        return input.replace(".", " ").replace(",", "");
     }
 }

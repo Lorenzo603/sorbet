@@ -64,41 +64,45 @@ public class Bet365Crawler extends AbstractCrawler {
 
             Document doc = Jsoup.parse(driver.getPageSource());
 
-            Elements matchGroups = doc.select(".gl-MarketGroupContainer");
-            matchGroups.forEach(matchGroup -> {
+            if ("soccer".equals(sport)) {
 
-                List<Quote> groupQuotes = new ArrayList<>();
+            } else if ("tennis".equals(sport)) {
+                Elements matchGroups = doc.select(".gl-MarketGroupContainer");
+                matchGroups.forEach(matchGroup -> {
 
-                Elements matches = matchGroup.select(".sl-CouponParticipantWithBookCloses");
-                matches.forEach(match -> {
-                    Quote quote = new Quote();
+                    List<Quote> groupQuotes = new ArrayList<>();
 
-                    String[] names = match.select(".sl-CouponParticipantWithBookCloses_Name").text().split(" v ");
-                    String alias1 = names[0];
-                    String alias2 = names[1];
+                    Elements matches = matchGroup.select(".sl-CouponParticipantWithBookCloses");
+                    matches.forEach(match -> {
+                        Quote quote = new Quote();
 
-                    quote.setAlias1(alias1);
-                    quote.setAlias2(alias2);
-                    quote.setNormalizedAlias1(bet365ValueNormalizer.normalizeAlias(alias1));
-                    quote.setNormalizedAlias2(bet365ValueNormalizer.normalizeAlias(alias2));
+                        String[] names = match.select(".sl-CouponParticipantWithBookCloses_Name").text().split(" v ");
+                        String alias1 = names[0];
+                        String alias2 = names[1];
 
-                    groupQuotes.add(quote);
+                        quote.setAlias1(alias1);
+                        quote.setAlias2(alias2);
+                        quote.setNormalizedAlias1(bet365ValueNormalizer.normalizeAlias(alias1));
+                        quote.setNormalizedAlias2(bet365ValueNormalizer.normalizeAlias(alias2));
+
+                        groupQuotes.add(quote);
+                    });
+
+                    Elements odds = matchGroup.select(".gl-ParticipantOddsOnlyDarker");
+                    IntStream.range(0, groupQuotes.size()).forEach(index -> {
+                        Quote currentQuote = groupQuotes.get(index);
+                        String oddValue1 = odds.select(".gl-ParticipantOddsOnly_Odds").get(index).text();
+                        String oddValue2 = odds.select(".gl-ParticipantOddsOnly_Odds").get(index + groupQuotes.size()).text();
+                        if (StringUtils.isNotEmpty(oddValue1) && StringUtils.isNotEmpty(oddValue2)) {
+                            currentQuote.addValue(Double.valueOf(oddValue1));
+                            currentQuote.addValue(Double.valueOf(oddValue2));
+                        }
+                    });
+
+                    quotes.addAll(groupQuotes);
+
                 });
-
-                Elements odds = matchGroup.select(".gl-ParticipantOddsOnlyDarker");
-                IntStream.range(0, groupQuotes.size()).forEach(index -> {
-                    Quote currentQuote = groupQuotes.get(index);
-                    String oddValue1 = odds.select(".gl-ParticipantOddsOnly_Odds").get(index).text();
-                    String oddValue2 = odds.select(".gl-ParticipantOddsOnly_Odds").get(index + groupQuotes.size()).text();
-                    if (StringUtils.isNotEmpty(oddValue1) && StringUtils.isNotEmpty(oddValue2)) {
-                        currentQuote.addValue(Double.valueOf(oddValue1));
-                        currentQuote.addValue(Double.valueOf(oddValue2));
-                    }
-                });
-
-                quotes.addAll(groupQuotes);
-
-            });
+            }
 
         } catch (Exception e) {
             LOG.error("Connection exception", e);

@@ -60,6 +60,9 @@ public class SportsMatchServiceImpl implements SportsMatchService {
         if (stringSimilarityService.areSimilar(quote.getAlias1(), key.split("\\|\\|\\|")[0])
             && stringSimilarityService.areSimilar(quote.getAlias2(), key.split("\\|\\|\\|")[1])) {
             for (String existingKey : sportsMatchHashMap.keySet()) {
+                if (key.contains("/") ^ existingKey.contains("/")) {
+                    return null;
+                }
                 if (stringSimilarityService.areSimilar(existingKey, key)) {
                     return sportsMatchHashMap.get(existingKey);
                 }
@@ -70,7 +73,7 @@ public class SportsMatchServiceImpl implements SportsMatchService {
     }
 
     private String generateSportsMatchMapKeyFromQuote(Quote quote) {
-        return generateSportsMatchMapKey(quote.getAlias1(), quote.getAlias2());
+        return generateSportsMatchMapKey(quote.getNormalizedAlias1(), quote.getNormalizedAlias2());
     }
 
     private String generateSportsMatchMapKey(String aliasTeam1, String aliasTeam2) {

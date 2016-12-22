@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.File;
@@ -37,7 +38,9 @@ public abstract class AbstractCrawler implements Crawler {
     protected WebDriver getWebDriver() {
         if (this.driver == null) {
             System.setProperty("webdriver.gecko.driver", "C:\\Selenium\\GeckoDriver\\geckodriver.exe");
-            this.driver = new FirefoxDriver();
+            System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\ChromeDriver\\chromedriver.exe");
+            // this.driver = new FirefoxDriver();
+            this.driver = new ChromeDriver();
         }
         return this.driver;
     }

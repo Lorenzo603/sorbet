@@ -15,6 +15,8 @@ public class SpringConfiguration {
     @Autowired
     private Bet365Crawler bet365Crawler;
     @Autowired
+    private BetAtHomeCrawler betAtHomeCrawler;
+    @Autowired
     private BetFairCrawler betFairCrawler;
     @Autowired
     private BWinCrawler bwinCrawler;
@@ -31,6 +33,7 @@ public class SpringConfiguration {
     public List<Crawler> crawlers(){
         return Arrays.asList(
                 bet365Crawler,
+                betAtHomeCrawler,
                 betFairCrawler,
                 bwinCrawler,
                 euroBetCrawler,
